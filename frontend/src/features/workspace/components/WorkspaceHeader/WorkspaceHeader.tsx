@@ -1,10 +1,18 @@
 import { useState } from 'react'
 import { BiPlus } from 'react-icons/bi'
-import { Skeleton, Stack, Text, useBreakpointValue } from '@chakra-ui/react'
+import {
+  Skeleton,
+  Stack,
+  Text,
+  useBreakpointValue,
+  useDisclosure,
+} from '@chakra-ui/react'
 
 import Button from '~components/Button'
 
 import { SortOption } from '~features/workspace/types'
+
+import CreateFormModal from '../CreateFormModal'
 
 import { WorkspaceSortDropdown } from './WorkspaceSortDropdown'
 
@@ -26,6 +34,7 @@ export const WorkspaceHeader = ({
 }: WorkspaceHeaderProps): JSX.Element => {
   const [sortOption, setSortOption] = useState(SortOption.LastUpdated)
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const isMobile = useBreakpointValue({
     base: true,
     xs: true,
@@ -33,35 +42,40 @@ export const WorkspaceHeader = ({
   })
 
   return (
-    <Stack justify="space-between" direction={{ base: 'column', md: 'row' }}>
-      <Text
-        flex={1}
-        as="h2"
-        textStyle="h2"
-        display="flex"
-        color="secondary.500"
-        my="0.75rem"
-      >
-        All forms (<Skeleton isLoaded={!isLoading}>{totalFormCount}</Skeleton>)
-      </Text>
-      <Stack
-        spacing="1rem"
-        direction={{ base: 'column', md: 'row' }}
-        h="fit-content"
-      >
-        <WorkspaceSortDropdown
-          value={sortOption}
-          onChange={setSortOption}
-          isDisabled={isLoading}
-        />
-        <Button
-          isFullWidth={isMobile}
-          isDisabled={isLoading}
-          leftIcon={<BiPlus fontSize="1.5rem" />}
+    <>
+      {isOpen && <CreateFormModal isOpen={isOpen} onClose={onClose} />}
+      <Stack justify="space-between" direction={{ base: 'column', md: 'row' }}>
+        <Text
+          flex={1}
+          as="h2"
+          textStyle="h2"
+          display="flex"
+          color="secondary.500"
+          my="0.75rem"
         >
-          Create form
-        </Button>
+          All forms (<Skeleton isLoaded={!isLoading}>{totalFormCount}</Skeleton>
+          )
+        </Text>
+        <Stack
+          spacing="1rem"
+          direction={{ base: 'column', md: 'row' }}
+          h="fit-content"
+        >
+          <WorkspaceSortDropdown
+            value={sortOption}
+            onChange={setSortOption}
+            isDisabled={isLoading}
+          />
+          <Button
+            isFullWidth={isMobile}
+            isDisabled={isLoading}
+            onClick={onOpen}
+            leftIcon={<BiPlus fontSize="1.5rem" />}
+          >
+            Create form
+          </Button>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   )
 }
