@@ -33,6 +33,8 @@ const baseContainerStyle = {
   alignItems: 'flex-start',
   maxWidth: 'inherit',
   textAlign: 'left',
+  alignSelf: 'stretch',
+  justifyContent: 'stretch',
 }
 
 export const Tile: ComponentMultiStyleConfig = {
