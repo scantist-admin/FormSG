@@ -131,6 +131,7 @@ const variantOutlineReverse: ThemingPropsThunk<CSSObject, ChakraTheme> = (
 
 export const Button: ComponentStyleConfig = {
   baseStyle: {
+    whiteSpace: 'pre-wrap',
     borderRadius: '0.25rem',
     border: '1px solid',
     textStyle: 'subhead-1',
