@@ -163,6 +163,7 @@ export const Button: ComponentStyleConfig = {
         border: 'none',
         minHeight: 'auto',
         fontWeight: 'normal',
+        w: 'fit-content',
       })
     },
   } as Record<ThemeButtonVariant, ThemingPropsThunk<SystemStyleObject>>,
