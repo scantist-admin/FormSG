@@ -298,7 +298,7 @@ describe('user.controller', () => {
       expect(MockUserService.updateUserContact).toHaveBeenCalledTimes(1)
     })
 
-    it('should return 401 when verifying contact returns InvalidOtpError', async () => {
+    it('should return 422 when verifying contact returns InvalidOtpError', async () => {
       // Arrange
       const mockRes = expressHandler.mockResponse()
       const expectedError = new InvalidOtpError('mock error')
@@ -312,7 +312,7 @@ describe('user.controller', () => {
       await UserController.handleContactVerifyOtp(MOCK_REQ, mockRes, jest.fn())
 
       // Assert
-      expect(mockRes.status).toBeCalledWith(401)
+      expect(mockRes.status).toBeCalledWith(422)
       expect(mockRes.json).toBeCalledWith(expectedError.message)
       expect(MockUserService.verifyContactOtp).toHaveBeenCalledTimes(1)
       expect(MockUserService.updateUserContact).not.toHaveBeenCalled()
