@@ -10,6 +10,7 @@ import {
   ROOT_ROUTE,
 } from '~constants/routes'
 
+import { BuilderPage } from '~features/admin-form/builder/BuilderPage'
 import { AdminFormLayout } from '~features/admin-form/common/AdminFormLayout'
 import { SettingsPage } from '~features/admin-form/settings/SettingsPage'
 import { PublicFormPage } from '~features/public-form/PublicFormPage'
@@ -44,7 +45,7 @@ export const AppRouter = (): JSX.Element => {
           path={`${ADMINFORM_ROUTE}/:formId`}
           element={<PrivateElement element={<AdminFormLayout />} />}
         >
-          <Route index element={<div>Builder subpage</div>} />
+          <Route index element={<BuilderPage />} />
           <Route
             path={ADMINFORM_SETTINGS_SUBROUTE}
             element={<SettingsPage />}
