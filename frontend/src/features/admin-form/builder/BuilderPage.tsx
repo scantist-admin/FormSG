@@ -1,14 +1,16 @@
 import { Flex } from '@chakra-ui/react'
 
-import { BuilderDrawer } from './components/BuilderDrawer'
+import { BuilderContent } from './components/BuilderContent'
+import { BuilderSidebar } from './components/BuilderSidebar'
+import { BuilderPageProvider } from './BuilderPageContext'
 
 export const BuilderPage = (): JSX.Element => {
   return (
-    <Flex direction="row" bg="neutral.200" h="100%">
-      <BuilderDrawer />
-      <Flex m="2rem" mb={0} flex={1} bg="white">
-        Remaining
+    <BuilderPageProvider>
+      <Flex direction="row" bg="neutral.200" h="100%">
+        <BuilderSidebar />
+        <BuilderContent />
       </Flex>
-    </Flex>
+    </BuilderPageProvider>
   )
 }
