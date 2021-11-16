@@ -1,17 +1,13 @@
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  Box,
-  BoxProps,
   Modal,
   ModalContent,
   useBreakpointValue,
   UseDisclosureReturn,
 } from '@chakra-ui/react'
-import { HTMLMotionProps, motion } from 'framer-motion'
-
-import { Merge } from '~shared/node_modules/type-fest'
 
 import { ModalCloseButton } from '~components/Modal'
+import { MotionBox } from '~components/motion'
 
 import { CreateFormDetailsScreen } from './CreateFormDetailsScreen'
 import {
@@ -19,9 +15,6 @@ import {
   useCreateFormWizard,
 } from './CreateFormWizardContext'
 import { SaveSecretKeyScreen } from './SaveSecretKeyScreen'
-
-type MotionBoxProps = Merge<BoxProps, HTMLMotionProps<'div'>>
-const MotionBox: FC<MotionBoxProps> = motion(Box)
 
 export type CreateFormModalProps = Pick<
   UseDisclosureReturn,
