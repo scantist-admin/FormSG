@@ -21,8 +21,9 @@ const DRAWER_MOTION_PROPS = {
   },
   exit: {
     width: 0,
+    opacity: 0,
     transition: {
-      duration: 0.1,
+      duration: 0.2,
     },
   },
 }
@@ -36,22 +37,27 @@ export const BuilderDrawer = ({
     <AnimatePresence>
       {isShowDrawer && (
         <MotionBox
+          key="sidebar"
           pos="relative"
-          my="1rem"
-          mx="1.5rem"
           as="aside"
           {...DRAWER_MOTION_PROPS}
         >
           <CloseButton
+            key="closebutton"
             pos="absolute"
-            top={0}
-            right={0}
+            top="1rem"
+            right="1.5rem"
+            fontSize="1.5rem"
+            w="1.5rem"
+            h="1.5rem"
             variant="clear"
             colorScheme="neutral"
-            children={<BiX fontSize="1.5rem" />}
+            children={<BiX />}
             onClick={handleClose}
           />
-          <Box w="max-content">{children}</Box>
+          <Box w="100%" minW="max-content">
+            {children}
+          </Box>
         </MotionBox>
       )}
     </AnimatePresence>
