@@ -4,9 +4,9 @@ import { AnimatePresence } from 'framer-motion'
 
 import { MotionBox } from '~components/motion'
 
+import { useBuilderPage } from '../../BuilderPageContext'
+
 export interface BuilderDrawerProps {
-  isOpen: boolean
-  onClose: () => void
   children: React.ReactNode
 }
 
@@ -28,13 +28,13 @@ const DRAWER_MOTION_PROPS = {
 }
 
 export const BuilderDrawer = ({
-  isOpen,
-  onClose,
   children,
 }: BuilderDrawerProps): JSX.Element => {
+  const { isShowDrawer, handleClose } = useBuilderPage()
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isShowDrawer && (
         <MotionBox
           pos="relative"
           my="1rem"
@@ -49,7 +49,7 @@ export const BuilderDrawer = ({
             variant="clear"
             colorScheme="neutral"
             children={<BiX fontSize="1.5rem" />}
-            onClick={onClose}
+            onClick={handleClose}
           />
           <Box w="max-content">{children}</Box>
         </MotionBox>

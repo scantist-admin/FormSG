@@ -1,12 +1,13 @@
 import { BiGitMerge } from 'react-icons/bi'
-import { Flex, Stack, Text } from '@chakra-ui/react'
+import { Flex, Stack } from '@chakra-ui/react'
 
 import { BxsColorFill } from '~assets/icons/BxsColorFill'
 import { BxsWidget } from '~assets/icons/BxsWidget'
 
-import { useBuilderPage } from '../BuilderPageContext'
+import { useBuilderPage } from '../../BuilderPageContext'
 
 import { BuilderDrawer } from './BuilderDrawer'
+import { BuilderDrawerContent } from './BuilderDrawerContent'
 import { BuilderTabIcon } from './BuilderTabIcon'
 
 enum BuilderTabs {
@@ -16,14 +17,8 @@ enum BuilderTabs {
 }
 
 export const BuilderSidebar = (): JSX.Element => {
-  const {
-    activeTab,
-    isShowDrawer,
-    handleBuilderClick,
-    handleDesignClick,
-    handleLogicClick,
-    handleClose,
-  } = useBuilderPage()
+  const { activeTab, handleBuilderClick, handleDesignClick, handleLogicClick } =
+    useBuilderPage()
 
   return (
     <Flex h="100%" bg="white">
@@ -53,10 +48,8 @@ export const BuilderSidebar = (): JSX.Element => {
           isActive={activeTab === BuilderTabs.Logic}
         />
       </Stack>
-      <BuilderDrawer isOpen={isShowDrawer} onClose={handleClose}>
-        <Text textStyle="subhead-3" color="secondary.500">
-          Builder
-        </Text>
+      <BuilderDrawer>
+        <BuilderDrawerContent />
       </BuilderDrawer>
     </Flex>
   )

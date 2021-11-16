@@ -7,11 +7,7 @@ import {
   useState,
 } from 'react'
 
-enum BuilderTabs {
-  Builder,
-  Design,
-  Logic,
-}
+import { BuilderTabs } from './types'
 
 type BuilderPageContextProps = {
   activeTab: BuilderTabs | null
