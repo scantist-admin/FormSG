@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Box, Container, Divider, Grid, Stack } from '@chakra-ui/react'
+import { Box, Container, Divider, Flex, Grid, Stack } from '@chakra-ui/react'
 import { chunk } from 'lodash'
 
 import Pagination from '~components/Pagination'
@@ -99,50 +99,52 @@ export const WorkspacePage = (): JSX.Element => {
   const topRef = useRef<HTMLDivElement>(null)
 
   return (
-    <Grid
-      bg="neutral.100"
-      templateColumns="1fr"
-      templateRows="auto 1fr auto"
-      templateAreas="'header' 'main' 'footer'"
-      h="100vh"
-      overflow="auto"
-    >
-      <Container
-        gridArea="header"
-        maxW={CONTAINER_MAXW}
-        borderBottom="1px solid var(--chakra-colors-neutral-300)"
-        p="2rem"
+    <Flex h="100vh" pos="fixed" w="100%">
+      <Grid
+        bg="neutral.100"
+        templateColumns="1fr"
+        templateRows="auto 1fr auto"
+        templateAreas="'header' 'main' 'footer'"
+        flex={1}
+        overflow="auto"
       >
-        <WorkspaceHeader
-          isLoading={isLoading}
-          totalFormCount={totalFormCount}
-        />
-      </Container>
-      <Box gridArea="main" overflow={{ base: 'initial', md: 'auto' }}>
-        <Box ref={topRef} />
-        <Stack
+        <Container
+          gridArea="header"
           maxW={CONTAINER_MAXW}
-          m="auto"
-          divider={<Divider borderColor="neutral.300" />}
+          borderBottom="1px solid var(--chakra-colors-neutral-300)"
+          p="2rem"
         >
-          <WorkspaceFormRows rows={paginatedData} isLoading={isLoading} />
-        </Stack>
-      </Box>
-      <Container
-        gridArea="footer"
-        py={{ base: '1rem', md: '3rem' }}
-        px="2rem"
-        maxW={CONTAINER_MAXW}
-        borderTop="1px solid var(--chakra-colors-neutral-300)"
-      >
-        <Pagination
-          isDisabled={isLoading}
-          currentPage={currentPage}
-          totalCount={totalFormCount ?? 0}
-          onPageChange={setPageNumber}
-          pageSize={PAGE_DEFAULTS.size}
-        />
-      </Container>
-    </Grid>
+          <WorkspaceHeader
+            isLoading={isLoading}
+            totalFormCount={totalFormCount}
+          />
+        </Container>
+        <Box gridArea="main" overflow={{ base: 'initial', md: 'auto' }}>
+          <Box ref={topRef} />
+          <Stack
+            maxW={CONTAINER_MAXW}
+            m="auto"
+            divider={<Divider borderColor="neutral.300" />}
+          >
+            <WorkspaceFormRows rows={paginatedData} isLoading={isLoading} />
+          </Stack>
+        </Box>
+        <Container
+          gridArea="footer"
+          py={{ base: '1rem', md: '3rem' }}
+          px="2rem"
+          maxW={CONTAINER_MAXW}
+          borderTop="1px solid var(--chakra-colors-neutral-300)"
+        >
+          <Pagination
+            isDisabled={isLoading}
+            currentPage={currentPage}
+            totalCount={totalFormCount ?? 0}
+            onPageChange={setPageNumber}
+            pageSize={PAGE_DEFAULTS.size}
+          />
+        </Container>
+      </Grid>
+    </Flex>
   )
 }
