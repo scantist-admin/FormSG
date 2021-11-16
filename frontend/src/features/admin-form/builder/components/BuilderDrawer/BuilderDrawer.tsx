@@ -6,9 +6,7 @@ import { MotionBox } from '~components/motion'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 
-export interface BuilderDrawerProps {
-  children: React.ReactNode
-}
+import { BuilderDrawerContent } from './BuilderDrawerContent'
 
 const DRAWER_MOTION_PROPS = {
   initial: { width: 0 },
@@ -28,18 +26,18 @@ const DRAWER_MOTION_PROPS = {
   },
 }
 
-export const BuilderDrawer = ({
-  children,
-}: BuilderDrawerProps): JSX.Element => {
+export const BuilderDrawer = (): JSX.Element => {
   const { isShowDrawer, handleClose } = useBuilderPage()
 
   return (
     <AnimatePresence>
       {isShowDrawer && (
         <MotionBox
+          bg="white"
           key="sidebar"
           pos="relative"
           as="aside"
+          overflow="auto"
           {...DRAWER_MOTION_PROPS}
         >
           <CloseButton
@@ -55,8 +53,8 @@ export const BuilderDrawer = ({
             children={<BiX />}
             onClick={handleClose}
           />
-          <Box w="100%" minW="max-content">
-            {children}
+          <Box w="100%" h="100%" minW="max-content">
+            <BuilderDrawerContent />
           </Box>
         </MotionBox>
       )}
