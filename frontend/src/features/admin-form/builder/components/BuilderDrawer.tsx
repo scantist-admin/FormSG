@@ -5,33 +5,25 @@ import { AnimatePresence } from 'framer-motion'
 
 import { BxsColorFill } from '~assets/icons/BxsColorFill'
 import { BxsWidget } from '~assets/icons/BxsWidget'
-import IconButton from '~components/IconButton'
 import { MotionBox } from '~components/motion'
-import Tooltip from '~components/Tooltip'
 
-interface BuilderTabIconProps {
-  icon: React.ReactElement
-  onClick: () => void
-  label: string
-  isActive: boolean
-}
-const BuilderTabIcon = ({
-  icon,
-  onClick,
-  label,
-  isActive,
-}: BuilderTabIconProps) => {
-  return (
-    <Tooltip label={label} placement="right">
-      <IconButton
-        aria-label={label}
-        variant="reverse"
-        isActive={isActive}
-        icon={icon}
-        onClick={onClick}
-      />
-    </Tooltip>
-  )
+import { BuilderTabIcon } from './BuilderTabIcon'
+
+const DRAWER_MOTION_PROPS = {
+  initial: { width: 0 },
+  animate: {
+    width: 300,
+    transition: {
+      bounce: 0,
+      duration: 0.2,
+    },
+  },
+  exit: {
+    width: 0,
+    transition: {
+      duration: 0.1,
+    },
+  },
 }
 
 enum BuilderTabs {
@@ -78,20 +70,7 @@ export const BuilderDrawer = (): JSX.Element => {
             my="1rem"
             mx="1.5rem"
             as="aside"
-            initial={{ width: 0 }}
-            animate={{
-              width: 300,
-              transition: {
-                bounce: 0,
-                duration: 0.2,
-              },
-            }}
-            exit={{
-              width: 0,
-              transition: {
-                duration: 0.1,
-              },
-            }}
+            {...DRAWER_MOTION_PROPS}
           >
             <CloseButton
               pos="absolute"
