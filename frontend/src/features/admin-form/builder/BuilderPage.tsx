@@ -27,11 +27,9 @@ export const BuilderPage = (): JSX.Element => {
   return (
     <DndContext
       onDragStart={({ active }) => {
-        if (active.data.current?.type === FieldDropType.Create) {
-          setCopyDragItem(
-            pick(active.data.current, ['id', 'fieldType']) as DragItem,
-          )
-        }
+        setCopyDragItem(
+          pick(active.data.current, ['id', 'fieldType']) as DragItem,
+        )
       }}
       onDragOver={(e) => {
         const { over } = e
@@ -86,7 +84,12 @@ export const BuilderPage = (): JSX.Element => {
       {createPortal(
         <DragOverlay>
           {copyDragItem ? (
-            <FieldOption isDragOverlay {...copyDragItem} />
+            <FieldOption
+              w="100%"
+              maxW="26rem"
+              isDragOverlay
+              {...copyDragItem}
+            />
           ) : null}
         </DragOverlay>,
         document.body,
@@ -151,6 +154,20 @@ const SortItem = ({ item }: { item: DragItem }) => {
             Drop your field here
           </Text>
         </Box>
+      </Box>
+    )
+  }
+
+  if (isDragging) {
+    return (
+      <Box
+        style={style}
+        ref={setNodeRef}
+        {...listeners}
+        py="2.25rem"
+        px="2.5rem"
+      >
+        <FieldOption isDragging={isDragging} {...item} />
       </Box>
     )
   }
