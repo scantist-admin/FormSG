@@ -26,6 +26,8 @@ import { useDraggable } from '@dnd-kit/core'
 
 import { BasicField } from '~shared/types/field'
 
+import { FieldDropType } from '../../types'
+
 interface DraggableFieldOptionProps extends FieldOptionProps {
   id: string
 }
@@ -121,6 +123,8 @@ export const DraggableFieldOption = ({
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     data: {
+      type: FieldDropType.Create,
+      id,
       fieldType,
     },
   })

@@ -8,26 +8,16 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { uniqueId } from 'lodash'
+import { nanoid } from 'nanoid'
 
 import { BasicField } from '~shared/types/field'
 
-import { BuilderTabs } from './types'
+import { BuilderTabs, DragItem } from './types'
 
 type BuilderPageContextProps = {
   activeTab: BuilderTabs | null
-  draggableBasicFieldItems: {
-    id: string
-    fieldType: BasicField
-  }[]
-  setDraggableBasicFieldItems: Dispatch<
-    SetStateAction<
-      {
-        id: string
-        fieldType: BasicField
-      }[]
-    >
-  >
+  draggableBasicFieldItems: DragItem[]
+  setDraggableBasicFieldItems: Dispatch<SetStateAction<DragItem[]>>
   isShowDrawer: boolean
   handleClose: () => void
   handleBuilderClick: () => void
@@ -93,7 +83,7 @@ const ALL_FIELDS_ORDERED = [
 
 export const generateBasicFieldItems = () => {
   return ALL_FIELDS_ORDERED.map((fieldType) => ({
-    id: uniqueId(),
+    id: nanoid(),
     fieldType,
   }))
 }
