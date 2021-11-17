@@ -26,8 +26,8 @@ import { useDraggable } from '@dnd-kit/core'
 
 import { BasicField } from '~shared/types/field'
 
-interface DraggableFieldProps {
-  fieldType: BasicField
+interface DraggableFieldOptionProps extends FieldOptionProps {
+  id: string
 }
 
 const FIELDS_TO_META: Record<BasicField, { label: string; icon: As }> = {
@@ -116,9 +116,10 @@ const FIELDS_TO_META: Record<BasicField, { label: string; icon: As }> = {
 
 export const DraggableFieldOption = ({
   fieldType,
-}: DraggableFieldProps): JSX.Element => {
+  id,
+}: DraggableFieldOptionProps): JSX.Element => {
   const { attributes, listeners, setNodeRef } = useDraggable({
-    id: `create-${fieldType}`,
+    id,
     data: {
       fieldType,
     },
@@ -134,7 +135,11 @@ export const DraggableFieldOption = ({
   )
 }
 
-export const FieldOption = forwardRef<DraggableFieldProps, 'div'>(
+interface FieldOptionProps {
+  fieldType: BasicField
+}
+
+export const FieldOption = forwardRef<FieldOptionProps, 'div'>(
   ({ fieldType, ...props }, ref) => {
     const meta = useMemo(() => FIELDS_TO_META[fieldType], [fieldType])
 

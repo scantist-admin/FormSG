@@ -1,16 +1,33 @@
 import {
   createContext,
+  Dispatch,
   FC,
+  SetStateAction,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from 'react'
+import { uniqueId } from 'lodash'
+
+import { BasicField } from '~shared/types/field'
 
 import { BuilderTabs } from './types'
 
 type BuilderPageContextProps = {
   activeTab: BuilderTabs | null
+  draggableBasicFieldItems: {
+    id: string
+    fieldType: BasicField
+  }[]
+  setDraggableBasicFieldItems: Dispatch<
+    SetStateAction<
+      {
+        id: string
+        fieldType: BasicField
+      }[]
+    >
+  >
   isShowDrawer: boolean
   handleClose: () => void
   handleBuilderClick: () => void
@@ -49,9 +66,44 @@ export const useBuilderPage = (): BuilderPageContextProps => {
   return context
 }
 
+const ALL_FIELDS_ORDERED = [
+  // Page section
+  BasicField.Section,
+  BasicField.Statement,
+  BasicField.Image,
+  // Fields section
+  BasicField.ShortText,
+  BasicField.LongText,
+  BasicField.Radio,
+  BasicField.Checkbox,
+  BasicField.Mobile,
+  BasicField.Email,
+  BasicField.HomeNo,
+  BasicField.Dropdown,
+  BasicField.YesNo,
+  BasicField.Rating,
+  BasicField.Number,
+  BasicField.Decimal,
+  BasicField.Attachment,
+  BasicField.Date,
+  BasicField.Table,
+  BasicField.Nric,
+  BasicField.Uen,
+]
+
+const generateBasicFieldItems = () => {
+  return ALL_FIELDS_ORDERED.map((fieldType) => ({
+    id: uniqueId(),
+    fieldType,
+  }))
+}
+
 // Provider hook that creates auth object and handles state
 const useProvidePageContext = (): BuilderPageContextProps => {
   const [activeTab, setActiveTab] = useState<BuilderTabs | null>(null)
+  const [draggableBasicFieldItems, setDraggableBasicFieldItems] = useState(
+    generateBasicFieldItems,
+  )
 
   const isShowDrawer = useMemo(
     () => activeTab !== null && activeTab !== BuilderTabs.Logic,
@@ -67,6 +119,8 @@ const useProvidePageContext = (): BuilderPageContextProps => {
   return {
     activeTab,
     isShowDrawer,
+    draggableBasicFieldItems,
+    setDraggableBasicFieldItems,
     handleClose,
     handleBuilderClick,
     handleDesignClick,

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Box,
   Divider,
@@ -10,8 +11,6 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { DragOverlay, useDndContext } from '@dnd-kit/core'
-
-import { BasicField } from '~shared/types/field'
 
 import { Tab } from '~components/Tabs'
 
@@ -55,33 +54,29 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
 
 const BasicFieldPanelContent = () => {
   const { active } = useDndContext()
+  const { draggableBasicFieldItems } = useBuilderPage()
+
+  const pageFieldOptions = useMemo(
+    () => draggableBasicFieldItems.slice(0, 3),
+    [draggableBasicFieldItems],
+  )
+  const fieldFieldOptions = useMemo(
+    () => draggableBasicFieldItems.slice(3),
+    [draggableBasicFieldItems],
+  )
 
   return (
     <>
       <Box>
         <FieldSection label="Page">
-          <DraggableFieldOption fieldType={BasicField.Section} />
-          <DraggableFieldOption fieldType={BasicField.Statement} />
-          <DraggableFieldOption fieldType={BasicField.Image} />
+          {pageFieldOptions.map((props) => (
+            <DraggableFieldOption {...props} />
+          ))}
         </FieldSection>
         <FieldSection label="Fields">
-          <DraggableFieldOption fieldType={BasicField.ShortText} />
-          <DraggableFieldOption fieldType={BasicField.LongText} />
-          <DraggableFieldOption fieldType={BasicField.Radio} />
-          <DraggableFieldOption fieldType={BasicField.Checkbox} />
-          <DraggableFieldOption fieldType={BasicField.Mobile} />
-          <DraggableFieldOption fieldType={BasicField.Email} />
-          <DraggableFieldOption fieldType={BasicField.HomeNo} />
-          <DraggableFieldOption fieldType={BasicField.Dropdown} />
-          <DraggableFieldOption fieldType={BasicField.YesNo} />
-          <DraggableFieldOption fieldType={BasicField.Rating} />
-          <DraggableFieldOption fieldType={BasicField.Number} />
-          <DraggableFieldOption fieldType={BasicField.Decimal} />
-          <DraggableFieldOption fieldType={BasicField.Attachment} />
-          <DraggableFieldOption fieldType={BasicField.Date} />
-          <DraggableFieldOption fieldType={BasicField.Table} />
-          <DraggableFieldOption fieldType={BasicField.Nric} />
-          <DraggableFieldOption fieldType={BasicField.Uen} />
+          {fieldFieldOptions.map((props) => (
+            <DraggableFieldOption {...props} />
+          ))}
         </FieldSection>
       </Box>
       <DragOverlay dropAnimation={null}>
