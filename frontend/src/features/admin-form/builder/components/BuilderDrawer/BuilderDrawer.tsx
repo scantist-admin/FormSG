@@ -41,6 +41,7 @@ export const BuilderDrawer = (): JSX.Element => {
           {...DRAWER_MOTION_PROPS}
         >
           <CloseButton
+            zIndex={1}
             key="closebutton"
             pos="absolute"
             top="1rem"

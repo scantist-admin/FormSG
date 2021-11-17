@@ -1,8 +1,9 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { useDroppable } from '@dnd-kit/core'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 import { BuilderTabs } from '../../types'
+
+import { CreateFieldDropzone } from './CreateFieldDropzone'
 
 export const BuilderContent = (): JSX.Element => {
   const { activeTab } = useBuilderPage()
@@ -16,25 +17,10 @@ export const BuilderContent = (): JSX.Element => {
   }
 
   return (
-    <Flex m="2rem" mb={0} flex={1} bg="white">
-      <NewDroppableField />
+    <Flex m="2rem" mb={0} flex={1} bg="primary.100" p="2.5rem" justify="center">
+      <Box bg="white" p="2.5rem" maxW="57rem" w="100%" h="fit-content">
+        <CreateFieldDropzone />
+      </Box>
     </Flex>
-  )
-}
-
-const NewDroppableField = (props: any) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: 'droppable',
-  })
-
-  return (
-    <Box
-      h="200px"
-      w="100%"
-      ref={setNodeRef}
-      color={isOver ? 'green.100' : undefined}
-    >
-      Drag a field from the Builder on the left to start
-    </Box>
   )
 }
