@@ -10,14 +10,13 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react'
-import { DragOverlay, useDndContext } from '@dnd-kit/core'
 
 import { Tab } from '~components/Tabs'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 import { BuilderTabs } from '../../types'
 
-import { DraggableFieldOption, FieldOption } from './DraggableField'
+import { DraggableFieldOption } from './DraggableField'
 
 export const BuilderDrawerContent = (): JSX.Element | null => {
   const { activeTab } = useBuilderPage()
@@ -53,7 +52,6 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
 }
 
 const BasicFieldPanelContent = () => {
-  const { active } = useDndContext()
   const { draggableBasicFieldItems } = useBuilderPage()
 
   const pageFieldOptions = useMemo(
@@ -66,25 +64,18 @@ const BasicFieldPanelContent = () => {
   )
 
   return (
-    <>
-      <Box>
-        <FieldSection label="Page">
-          {pageFieldOptions.map((props) => (
-            <DraggableFieldOption {...props} />
-          ))}
-        </FieldSection>
-        <FieldSection label="Fields">
-          {fieldFieldOptions.map((props) => (
-            <DraggableFieldOption {...props} />
-          ))}
-        </FieldSection>
-      </Box>
-      <DragOverlay dropAnimation={null}>
-        {active ? (
-          <FieldOption fieldType={active.data.current?.fieldType} />
-        ) : null}
-      </DragOverlay>
-    </>
+    <Box>
+      <FieldSection label="Page">
+        {pageFieldOptions.map((props) => (
+          <DraggableFieldOption key={props.id} {...props} />
+        ))}
+      </FieldSection>
+      <FieldSection label="Fields">
+        {fieldFieldOptions.map((props) => (
+          <DraggableFieldOption key={props.id} {...props} />
+        ))}
+      </FieldSection>
+    </Box>
   )
 }
 

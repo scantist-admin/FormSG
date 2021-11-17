@@ -1,23 +1,52 @@
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Flex } from '@chakra-ui/react'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, DragOverlay } from '@dnd-kit/core'
+
+import { BasicField } from '~shared/types/field'
 
 import { BuilderContent } from './components/BuilderContent'
 import { BuilderDrawer } from './components/BuilderDrawer'
+import { FieldOption } from './components/BuilderDrawer/DraggableField'
 import { BuilderSidebar } from './components/BuilderSidebar'
-import { BuilderPageProvider } from './BuilderPageContext'
+import { generateBasicFieldItems, useBuilderPage } from './BuilderPageContext'
 
 export const BuilderPage = (): JSX.Element => {
+  const [copyDragItem, setCopyDragItem] = useState<{
+    id: string
+    fieldType: BasicField
+  } | null>(null)
+  const { draggableBasicFieldItems, setDraggableBasicFieldItems } =
+    useBuilderPage()
+
   return (
-    <BuilderPageProvider>
-      <DndContext>
-        <Flex direction="row" flex={1} bg="neutral.200" overflow="hidden">
-          <Flex h="100%" w="100%" overflow="auto">
-            <BuilderSidebar />
-            <BuilderDrawer />
-            <BuilderContent />
-          </Flex>
+    <DndContext
+      onDragStart={(e) => {
+        const { active } = e
+        console.log('dragStart', e)
+        const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+        if (item) {
+          setCopyDragItem(item)
+          setDraggableBasicFieldItems(generateBasicFieldItems())
+        }
+      }}
+      onDragEnd={(e) => {
+        setCopyDragItem(null)
+      }}
+    >
+      <Flex direction="row" flex={1} bg="neutral.200" overflow="hidden">
+        <Flex h="100%" w="100%" overflow="auto">
+          <BuilderSidebar />
+          <BuilderDrawer />
+          <BuilderContent />
         </Flex>
-      </DndContext>
-    </BuilderPageProvider>
+      </Flex>
+      {createPortal(
+        <DragOverlay>
+          {copyDragItem ? <FieldOption {...copyDragItem} /> : null}
+        </DragOverlay>,
+        document.body,
+      )}
+    </DndContext>
   )
 }

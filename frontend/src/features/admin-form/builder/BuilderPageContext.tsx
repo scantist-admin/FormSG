@@ -91,7 +91,7 @@ const ALL_FIELDS_ORDERED = [
   BasicField.Uen,
 ]
 
-const generateBasicFieldItems = () => {
+export const generateBasicFieldItems = () => {
   return ALL_FIELDS_ORDERED.map((fieldType) => ({
     id: uniqueId(),
     fieldType,
