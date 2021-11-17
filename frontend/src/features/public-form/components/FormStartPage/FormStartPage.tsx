@@ -1,11 +1,11 @@
 import { FormBannerLogo } from './FormBannerLogo'
-import { FormHeader } from './FormHeader'
+import { PublicFormHeader } from './PublicFormHeader'
 
 export const FormStartPage = (): JSX.Element => {
   return (
     <>
       <FormBannerLogo />
-      <FormHeader />
+      <PublicFormHeader />
     </>
   )
 }
