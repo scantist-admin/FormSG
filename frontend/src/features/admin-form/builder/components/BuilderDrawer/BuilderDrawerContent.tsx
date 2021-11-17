@@ -41,7 +41,7 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
         </TabList>
         <Divider w="auto" mx="-1.5rem" />
       </Box>
-      <TabPanels pb="1rem" px="1.5rem" flex={1} overflowY="auto">
+      <TabPanels pb="1rem" flex={1} overflowY="auto">
         <TabPanel>
           <BasicFieldPanelContent />
         </TabPanel>
@@ -89,6 +89,7 @@ const FieldSection = ({
   return (
     <Box mb="0.5rem">
       <Text
+        px="1.5rem"
         pt="1rem"
         pb="0.75rem"
         textStyle="subhead-2"

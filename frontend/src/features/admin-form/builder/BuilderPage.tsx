@@ -21,16 +21,18 @@ export const BuilderPage = (): JSX.Element => {
 
   return (
     <DndContext
-      onDragStart={(e) => {
-        const { active } = e
-        console.log('dragStart', e)
+      onDragStart={({ active }) => {
         const item = draggableBasicFieldItems.find((i) => i.id === active.id)
         if (item) {
           setCopyDragItem(item)
-          setDraggableBasicFieldItems(generateBasicFieldItems())
         }
       }}
-      onDragEnd={(e) => {
+      onDragEnd={({ active, over }) => {
+        console.log('ondragend', active, over)
+        const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+        if (item && over) {
+          setDraggableBasicFieldItems(generateBasicFieldItems())
+        }
         setCopyDragItem(null)
       }}
     >
@@ -43,7 +45,9 @@ export const BuilderPage = (): JSX.Element => {
       </Flex>
       {createPortal(
         <DragOverlay>
-          {copyDragItem ? <FieldOption {...copyDragItem} /> : null}
+          {copyDragItem ? (
+            <FieldOption isDragOverlay {...copyDragItem} />
+          ) : null}
         </DragOverlay>,
         document.body,
       )}

@@ -118,7 +118,7 @@ export const DraggableFieldOption = ({
   fieldType,
   id,
 }: DraggableFieldOptionProps): JSX.Element => {
-  const { attributes, listeners, setNodeRef } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     data: {
       fieldType,
@@ -130,6 +130,7 @@ export const DraggableFieldOption = ({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      isDragging={isDragging}
       fieldType={fieldType}
     />
   )
@@ -137,14 +138,32 @@ export const DraggableFieldOption = ({
 
 interface FieldOptionProps {
   fieldType: BasicField
+  isDragOverlay?: boolean
+  isDragging?: boolean
 }
 
 export const FieldOption = forwardRef<FieldOptionProps, 'div'>(
-  ({ fieldType, ...props }, ref) => {
+  ({ fieldType, isDragOverlay, isDragging, ...props }, ref) => {
     const meta = useMemo(() => FIELDS_TO_META[fieldType], [fieldType])
 
     return (
-      <Box ref={ref} {...props}>
+      <Box
+        px="1.5rem"
+        _hover={{ bg: isDragOverlay ? 'white' : 'primary.100' }}
+        _focus={{ bg: 'primary.200' }}
+        bg="white"
+        cursor="grab"
+        {...(isDragOverlay
+          ? {
+              transform: 'scale(1.05)',
+              shadow: 'md',
+              cursor: 'grabbing',
+            }
+          : {})}
+        {...(isDragging ? { opacity: 0.5 } : {})}
+        ref={ref}
+        {...props}
+      >
         <Stack
           py="1rem"
           spacing="1.5rem"
