@@ -1,14 +1,17 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { BiDuplicate, BiGridHorizontal, BiTrash } from 'react-icons/bi'
 import { Box, ButtonGroup, Collapse, Flex, Icon } from '@chakra-ui/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+
+import { BasicField } from '~shared/types/field'
 
 import IconButton from '~components/IconButton'
 
 import { FieldDropType, FormBuilderField } from '../../types'
 import { FieldOption } from '../BuilderDrawer/DraggableField'
 
+import { SectionBuilderField } from './Fields/SectionBuilderField'
 import { useFormBuilder } from './FormBuilderContext'
 
 interface SortableFieldRowProps {
@@ -81,7 +84,9 @@ export const SortableFieldRow = ({
 
   return (
     <Flex
+      transitionDuration="normal"
       bg={isActive ? 'secondary.100' : 'white'}
+      _hover={{ bg: 'secondary.100' }}
       borderRadius="4px"
       {...(isActive ? { 'data-active': true } : {})}
       _focusWithin={{
@@ -108,8 +113,9 @@ export const SortableFieldRow = ({
           color: 'secondary.300',
         }}
       />
-      {/* TODO: Render the field */}
-      <Box>{item.fieldType}</Box>
+      <Box p="1.5rem" pt={0} w="100%">
+        <MemoFieldRow field={item} />
+      </Box>
       <Collapse in={isActive} style={{ width: '100%' }}>
         <Flex
           px="1.5rem"
@@ -133,3 +139,13 @@ export const SortableFieldRow = ({
     </Flex>
   )
 }
+
+const MemoFieldRow = memo(({ field }: { field: FormBuilderField }) => {
+  switch (field.fieldType) {
+    case BasicField.Section:
+      return <SectionBuilderField field={field} />
+    default:
+      // TODO: Render the field
+      return <Box>{field.fieldType}</Box>
+  }
+})
