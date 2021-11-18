@@ -11,7 +11,8 @@ import { BuilderDrawerContent } from './BuilderDrawerContent'
 const DRAWER_MOTION_PROPS = {
   initial: { width: 0 },
   animate: {
-    width: 300,
+    maxWidth: '33.25rem',
+    width: '36%',
     transition: {
       bounce: 0,
       duration: 0.2,

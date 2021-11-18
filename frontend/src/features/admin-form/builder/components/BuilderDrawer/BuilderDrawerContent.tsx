@@ -18,6 +18,7 @@ import { BuilderTabs } from '../../types'
 import { useFormBuilder } from '../FormBuilderScreen/FormBuilderContext'
 
 import { DraggableFieldOption } from './DraggableField'
+import { EditFieldDrawer } from './EditFieldDrawer'
 
 export const BuilderDrawerContent = (): JSX.Element | null => {
   const { activeTab } = useBuilderPage()
@@ -39,7 +40,7 @@ const BuilderDrawerBuilderContent = ({
 }: BuilderDrawerContentProps): JSX.Element => {
   const { currentSelectedField } = useFormBuilder()
   if (currentSelectedField) {
-    return <Box>{JSON.stringify(currentSelectedField)}</Box>
+    return <EditFieldDrawer />
   }
 
   return (
