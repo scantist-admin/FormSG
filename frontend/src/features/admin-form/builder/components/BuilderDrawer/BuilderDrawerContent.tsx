@@ -15,6 +15,7 @@ import { Tab } from '~components/Tabs'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 import { BuilderTabs } from '../../types'
+import { useFormBuilder } from '../FormBuilderScreen/FormBuilderContext'
 
 import { DraggableFieldOption } from './DraggableField'
 
@@ -52,7 +53,7 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
 }
 
 const BasicFieldPanelContent = () => {
-  const { draggableBasicFieldItems } = useBuilderPage()
+  const { draggableBasicFieldItems } = useFormBuilder()
 
   const pageFieldOptions = useMemo(
     () => draggableBasicFieldItems.slice(0, 3),

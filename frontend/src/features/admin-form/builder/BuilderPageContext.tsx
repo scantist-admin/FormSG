@@ -1,23 +1,16 @@
 import {
   createContext,
-  Dispatch,
   FC,
-  SetStateAction,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from 'react'
-import { nanoid } from 'nanoid'
 
-import { BasicField } from '~shared/types/field'
-
-import { BuilderTabs, DragItem } from './types'
+import { BuilderTabs } from './types'
 
 type BuilderPageContextProps = {
   activeTab: BuilderTabs | null
-  draggableBasicFieldItems: DragItem[]
-  setDraggableBasicFieldItems: Dispatch<SetStateAction<DragItem[]>>
   isShowDrawer: boolean
   handleClose: () => void
   handleBuilderClick: () => void
@@ -56,44 +49,9 @@ export const useBuilderPage = (): BuilderPageContextProps => {
   return context
 }
 
-const ALL_FIELDS_ORDERED = [
-  // Page section
-  BasicField.Section,
-  BasicField.Statement,
-  BasicField.Image,
-  // Fields section
-  BasicField.ShortText,
-  BasicField.LongText,
-  BasicField.Radio,
-  BasicField.Checkbox,
-  BasicField.Mobile,
-  BasicField.Email,
-  BasicField.HomeNo,
-  BasicField.Dropdown,
-  BasicField.YesNo,
-  BasicField.Rating,
-  BasicField.Number,
-  BasicField.Decimal,
-  BasicField.Attachment,
-  BasicField.Date,
-  BasicField.Table,
-  BasicField.Nric,
-  BasicField.Uen,
-]
-
-export const generateBasicFieldItems = () => {
-  return ALL_FIELDS_ORDERED.map((fieldType) => ({
-    id: nanoid(),
-    fieldType,
-  }))
-}
-
 // Provider hook that creates auth object and handles state
 const useProvidePageContext = (): BuilderPageContextProps => {
   const [activeTab, setActiveTab] = useState<BuilderTabs | null>(null)
-  const [draggableBasicFieldItems, setDraggableBasicFieldItems] = useState(
-    generateBasicFieldItems,
-  )
 
   const isShowDrawer = useMemo(
     () => activeTab !== null && activeTab !== BuilderTabs.Logic,
@@ -109,8 +67,6 @@ const useProvidePageContext = (): BuilderPageContextProps => {
   return {
     activeTab,
     isShowDrawer,
-    draggableBasicFieldItems,
-    setDraggableBasicFieldItems,
     handleClose,
     handleBuilderClick,
     handleDesignClick,
