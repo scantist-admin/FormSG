@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { BiGridHorizontal } from 'react-icons/bi'
+import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
 import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core'
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -18,7 +19,7 @@ const removeIsCreate = (dragItem: DragItem) => {
 }
 
 export const BuilderPage = (): JSX.Element => {
-  const [copyDragItem, setCopyDragItem] = useState<DragItem | null>(null)
+  const [dragItem, setDragItem] = useState<DragItem | null>(null)
   const { draggableBasicFieldItems, setDraggableBasicFieldItems } =
     useBuilderPage()
 
@@ -27,16 +28,30 @@ export const BuilderPage = (): JSX.Element => {
   return (
     <DndContext
       onDragStart={({ active }) => {
-        setCopyDragItem(
-          pick(active.data.current, ['id', 'fieldType']) as DragItem,
-        )
+        setDragItem(pick(active.data.current, ['id', 'fieldType']) as DragItem)
       }}
-      onDragOver={(e) => {
-        const { over } = e
-        if (copyDragItem && over?.id === 'sortArea') {
-          const sortIndex = sortItems.findIndex((i) => i.id === copyDragItem.id)
-          if (sortIndex < 0) {
-            setSortItems([...sortItems, { ...copyDragItem, isCreate: true }])
+      onDragOver={({ active, over }) => {
+        // Create type, check index to insert new field.
+        if (dragItem && active.data.current?.type === FieldDropType.Create) {
+          setSortItems((items) => {
+            const overIndex = sortItems.findIndex((i) => i.id === over?.id)
+            const newIndex = overIndex === -1 ? items.length : overIndex
+
+            return [
+              ...items.slice(0, newIndex),
+              { ...dragItem, isCreate: true },
+              ...items.slice(newIndex),
+            ]
+          })
+        }
+      }}
+      onDragCancel={({ active }) => {
+        const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+        if (item) {
+          const filteredSortItems = sortItems.filter((i) => i.id !== item.id)
+          if (filteredSortItems.length < sortItems.length) {
+            setSortItems(filteredSortItems)
+            setDraggableBasicFieldItems(generateBasicFieldItems())
           }
         }
       }}
@@ -65,7 +80,7 @@ export const BuilderPage = (): JSX.Element => {
               : nextSortItems
           })
         }
-        setCopyDragItem(null)
+        setDragItem(null)
       }}
     >
       <Flex h="100%" w="100%" overflow="auto" bg="neutral.200" direction="row">
@@ -83,14 +98,7 @@ export const BuilderPage = (): JSX.Element => {
       </Flex>
       {createPortal(
         <DragOverlay>
-          {copyDragItem ? (
-            <FieldOption
-              w="100%"
-              maxW="26rem"
-              isDragOverlay
-              {...copyDragItem}
-            />
-          ) : null}
+          {dragItem ? <FieldOption isDragOverlay {...dragItem} /> : null}
         </DragOverlay>,
         document.body,
       )}
@@ -100,33 +108,33 @@ export const BuilderPage = (): JSX.Element => {
 
 const SortArea = (props: any) => {
   const { children } = props
-  const args = useDroppable({ id: 'sortArea', data: { type: 'sortArea' } })
-  const { setNodeRef, isOver } = args
-
-  const style = {
-    flex: 1,
-    display: 'flex',
-    flexDir: 'column',
-    flexWrap: 'wrap',
-    background: isOver ? 'green' : '#ccc',
-  } as const
+  const { setNodeRef } = useDroppable({
+    id: 'sortArea',
+    data: { type: 'sortArea' },
+  })
 
   return (
-    <Box ref={setNodeRef} {...style}>
-      {children}
+    <Box ref={setNodeRef} flex={1}>
+      <Stack spacing="2.25rem">{children}</Stack>
     </Box>
   )
 }
 
 const SortItem = ({ item }: { item: DragItem }) => {
-  const { listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({
-      id: item.id,
-      data: {
-        ...item,
-        type: FieldDropType.Reorder,
-      },
-    })
+  const {
+    listeners,
+    setNodeRef,
+    transform,
+    attributes,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: item.id,
+    data: {
+      ...item,
+      type: FieldDropType.Reorder,
+    },
+  })
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -139,21 +147,17 @@ const SortItem = ({ item }: { item: DragItem }) => {
         style={style}
         ref={setNodeRef}
         {...listeners}
-        py="2.25rem"
+        {...attributes}
+        py="1.5rem"
         px="2.5rem"
+        bg="primary.200"
+        border="1px solid"
+        borderColor="primary.500"
+        textAlign="center"
       >
-        <Box
-          py="1.5rem"
-          px="2.5rem"
-          bg="primary.200"
-          border="1px solid"
-          borderColor="primary.500"
-          textAlign="center"
-        >
-          <Text textStyle="subhead-2" color="primary.400">
-            Drop your field here
-          </Text>
-        </Box>
+        <Text textStyle="subhead-2" color="primary.400">
+          Drop your field here
+        </Text>
       </Box>
     )
   }
@@ -162,10 +166,10 @@ const SortItem = ({ item }: { item: DragItem }) => {
     return (
       <Box
         style={style}
-        ref={setNodeRef}
-        {...listeners}
-        py="2.25rem"
         px="2.5rem"
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
       >
         <FieldOption isDragging={isDragging} {...item} />
       </Box>
@@ -173,8 +177,31 @@ const SortItem = ({ item }: { item: DragItem }) => {
   }
 
   return (
-    <div ref={setNodeRef} {...listeners} style={style}>
+    <Flex
+      bg="secondary.100"
+      borderRadius="4px"
+      _focusWithin={{
+        boxShadow: '0 0 0 2px var(--chakra-colors-primary-500)',
+      }}
+      style={style}
+      px="2.5rem"
+      ref={setNodeRef}
+      flexDir="column"
+      align="center"
+    >
+      <Icon
+        as={BiGridHorizontal}
+        color="secondary.200"
+        fontSize="1.5rem"
+        {...listeners}
+        {...attributes}
+        cursor="grab"
+        transition="color 0.2s ease"
+        _hover={{
+          color: 'secondary.300',
+        }}
+      />
       {item.fieldType}
-    </div>
+    </Flex>
   )
 }

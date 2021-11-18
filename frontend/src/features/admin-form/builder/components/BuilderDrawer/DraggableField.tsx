@@ -21,7 +21,15 @@ import {
   BiToggleLeft,
   BiUser,
 } from 'react-icons/bi'
-import { As, Box, forwardRef, Icon, Stack, Text } from '@chakra-ui/react'
+import {
+  As,
+  Box,
+  BoxProps,
+  forwardRef,
+  Icon,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { useDraggable } from '@dnd-kit/core'
 
 import { BasicField } from '~shared/types/field'
@@ -140,7 +148,7 @@ export const DraggableFieldOption = ({
   )
 }
 
-interface FieldOptionProps {
+interface FieldOptionProps extends BoxProps {
   fieldType: BasicField
   isDragOverlay?: boolean
   isDragging?: boolean
