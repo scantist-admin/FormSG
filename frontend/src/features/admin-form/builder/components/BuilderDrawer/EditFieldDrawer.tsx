@@ -5,6 +5,8 @@ import IconButton from '~components/IconButton'
 
 import { useFormBuilder } from '../FormBuilderScreen/FormBuilderContext'
 
+import { BuilderDrawerCloseButton } from './BuilderDrawerCloseButton'
+
 export const EditFieldDrawer = (): JSX.Element | null => {
   const { setCurrentSelectedField, currentSelectedField: field } =
     useFormBuilder()
@@ -14,11 +16,13 @@ export const EditFieldDrawer = (): JSX.Element | null => {
   return (
     <Box>
       <Flex
-        pl="1.5rem"
-        pr="3rem"
+        pos="sticky"
+        top={0}
+        px="1.5rem"
         py="1rem"
         align="center"
         borderBottom="1px solid var(--chakra-colors-neutral-300)"
+        bg="white"
       >
         <IconButton
           minH="1.5rem"
@@ -30,7 +34,9 @@ export const EditFieldDrawer = (): JSX.Element | null => {
           icon={<BiLeftArrowAlt />}
         />
         <Box m="auto">Edit {field.fieldType}</Box>
+        <BuilderDrawerCloseButton />
       </Flex>
+      <Flex flexDir="column">TODO: Insert field options here</Flex>
     </Box>
   )
 }

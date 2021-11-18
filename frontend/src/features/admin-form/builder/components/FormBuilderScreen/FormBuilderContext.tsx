@@ -30,6 +30,8 @@ type FormBuilderContextProps = {
   handleDragCancel: DndContextProps['onDragCancel']
   handleDragEnd: DndContextProps['onDragEnd']
 
+  handleCloseDrawer: () => void
+
   sortItems: DragItem[]
   currentDragItem: DragItem | null
 
@@ -71,7 +73,7 @@ export const useFormBuilder = (): FormBuilderContextProps => {
 // Provider hook that creates builder object and handles build state
 const useProvideFormBuilder = (): FormBuilderContextProps => {
   const { data, isLoading } = useAdminForm()
-  const { handleBuilderClick } = useBuilderPage()
+  const { handleBuilderClick, handleClose } = useBuilderPage()
 
   const [draggableBasicFieldItems, setDraggableBasicFieldItems] = useState(
     generateDraggableFields,
@@ -90,6 +92,11 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
       )
     }
   }, [data])
+
+  const handleCloseDrawer = useCallback(() => {
+    setCurrentSelectedField(null)
+    handleClose()
+  }, [handleClose])
 
   const handleFieldClick = useCallback(
     (field: DragItem) => {
@@ -198,6 +205,7 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
     handleDragCancel,
     handleDragOver,
     handleDragEnd,
+    handleCloseDrawer,
     sortItems,
     currentDragItem,
     currentSelectedField,

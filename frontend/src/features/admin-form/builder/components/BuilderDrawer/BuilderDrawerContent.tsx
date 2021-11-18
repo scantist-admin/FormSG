@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import {
   Box,
   Divider,
+  Flex,
   Stack,
   StackDivider,
   TabList,
@@ -17,6 +18,7 @@ import { useBuilderPage } from '../../BuilderPageContext'
 import { BuilderTabs } from '../../types'
 import { useFormBuilder } from '../FormBuilderScreen/FormBuilderContext'
 
+import { BuilderDrawerCloseButton } from './BuilderDrawerCloseButton'
 import { DraggableFieldOption } from './DraggableField'
 import { EditFieldDrawer } from './EditFieldDrawer'
 
@@ -39,6 +41,7 @@ const BuilderDrawerBuilderContent = ({
   isLoading,
 }: BuilderDrawerContentProps): JSX.Element => {
   const { currentSelectedField } = useFormBuilder()
+
   if (currentSelectedField) {
     return <EditFieldDrawer />
   }
@@ -46,9 +49,12 @@ const BuilderDrawerBuilderContent = ({
   return (
     <Tabs pos="relative" h="100%" display="flex" flexDir="column">
       <Box pt="1rem" px="1.5rem" bg="white">
-        <Text textStyle="subhead-3" color="secondary.500" mb="1rem">
-          Builder
-        </Text>
+        <Flex justify="space-between">
+          <Text textStyle="subhead-3" color="secondary.500" mb="1rem">
+            Builder
+          </Text>
+          <BuilderDrawerCloseButton />
+        </Flex>
         <TabList mx="-1rem" w="100%">
           <Tab isDisabled={isLoading}>Basic</Tab>
           <Tab isDisabled={isLoading}>MyInfo</Tab>

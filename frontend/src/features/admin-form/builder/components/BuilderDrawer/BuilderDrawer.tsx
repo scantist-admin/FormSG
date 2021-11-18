@@ -1,5 +1,4 @@
-import { BiX } from 'react-icons/bi'
-import { Box, CloseButton } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { AnimatePresence } from 'framer-motion'
 
 import { MotionBox } from '~components/motion'
@@ -28,7 +27,7 @@ const DRAWER_MOTION_PROPS = {
 }
 
 export const BuilderDrawer = (): JSX.Element => {
-  const { isShowDrawer, handleClose } = useBuilderPage()
+  const { isShowDrawer } = useBuilderPage()
 
   return (
     <AnimatePresence>
@@ -41,20 +40,6 @@ export const BuilderDrawer = (): JSX.Element => {
           overflow="auto"
           {...DRAWER_MOTION_PROPS}
         >
-          <CloseButton
-            zIndex={1}
-            key="closebutton"
-            pos="absolute"
-            top="1rem"
-            right="1.5rem"
-            fontSize="1.5rem"
-            w="1.5rem"
-            h="1.5rem"
-            variant="clear"
-            colorScheme="neutral"
-            children={<BiX />}
-            onClick={handleClose}
-          />
           <Box w="100%" h="100%" minW="max-content">
             <BuilderDrawerContent />
           </Box>
