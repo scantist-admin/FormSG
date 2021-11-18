@@ -16,10 +16,9 @@ import { useAdminForm } from '~features/admin-form/common/queries'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 import { useMutateAdminForm } from '../../mutations'
-import { DragItem, FieldDropType } from '../../types'
+import { DragItem, FieldDropType, FormBuilderField } from '../../types'
 
 import { generateDraggableFields } from './utils/generateDraggableFields'
-import { removeIsCreate } from './utils/removeIsCreate'
 
 type FormBuilderContextProps = {
   draggableBasicFieldItems: DragItem[]
@@ -32,12 +31,12 @@ type FormBuilderContextProps = {
 
   handleCloseDrawer: () => void
 
-  sortItems: DragItem[]
+  sortItems: FormBuilderField[]
   currentDragItem: DragItem | null
 
-  currentSelectedField: DragItem | null
-  handleFieldClick: (field: DragItem) => void
-  setCurrentSelectedField: Dispatch<SetStateAction<DragItem | null>>
+  currentSelectedField: FormBuilderField | null
+  handleFieldClick: (field: FormBuilderField) => void
+  setCurrentSelectedField: Dispatch<SetStateAction<FormBuilderField | null>>
 
   isLoading: boolean
 }
@@ -80,8 +79,8 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
   )
   const [currentDragItem, setCurrentDragItem] = useState<DragItem | null>(null)
   const [currentSelectedField, setCurrentSelectedField] =
-    useState<DragItem | null>(null)
-  const [sortItems, setSortItems] = useState<DragItem[]>([])
+    useState<FormBuilderField | null>(null)
+  const [sortItems, setSortItems] = useState<FormBuilderField[]>([])
 
   const { mutateReorderField } = useMutateAdminForm()
 
@@ -99,7 +98,7 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
   }, [handleClose])
 
   const handleFieldClick = useCallback(
-    (field: DragItem) => {
+    (field: FormBuilderField) => {
       handleBuilderClick()
       setCurrentSelectedField(field)
     },
@@ -108,11 +107,14 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
 
   const handleDragStart: DndContextProps['onDragStart'] = useCallback(
     ({ active }: DragStartEvent) => {
+      if (currentSelectedField) {
+        setCurrentSelectedField(null)
+      }
       setCurrentDragItem(
         pick(active.data.current, ['id', 'fieldType']) as DragItem,
       )
     },
-    [],
+    [currentSelectedField],
   )
 
   const handleDragOver: DndContextProps['onDragOver'] = useCallback(
@@ -122,62 +124,62 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
         currentDragItem &&
         active.data.current?.type === FieldDropType.Create
       ) {
-        setSortItems((items) => {
-          const overIndex = sortItems.findIndex((i) => i.id === over?.id)
-          const newIndex = overIndex === -1 ? items.length : overIndex
+        return
+        // setSortItems((items) => {
+        //   const overIndex = sortItems.findIndex((i) => i.id === over?.id)
+        //   const newIndex = overIndex === -1 ? items.length : overIndex
 
-          return [
-            ...items.slice(0, newIndex),
-            { ...currentDragItem, isCreate: true },
-            ...items.slice(newIndex),
-          ]
-        })
+        //   return [
+        //     ...items.slice(0, newIndex),
+        //     { ...currentDragItem, isCreate: true },
+        //     ...items.slice(newIndex),
+        //   ]
+        // })
       }
     },
-    [currentDragItem, sortItems],
+    [currentDragItem],
   )
 
   const handleDragCancel: DndContextProps['onDragCancel'] = useCallback(
     ({ active }) => {
-      const item = draggableBasicFieldItems.find((i) => i.id === active.id)
-      if (item) {
-        const filteredSortItems = sortItems.filter((i) => i.id !== item.id)
-        if (filteredSortItems.length < sortItems.length) {
-          setSortItems(filteredSortItems)
-          setDraggableBasicFieldItems(generateDraggableFields())
-        }
-      }
+      // const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+      // if (item) {
+      //   const filteredSortItems = sortItems.filter((i) => i.id !== item.id)
+      //   if (filteredSortItems.length < sortItems.length) {
+      //     setSortItems(filteredSortItems)
+      //     setDraggableBasicFieldItems(generateDraggableFields())
+      //   }
+      // }
+      return
     },
-    [draggableBasicFieldItems, sortItems],
+    [],
   )
 
   const handleDragEnd: DndContextProps['onDragEnd'] = useCallback(
     ({ active, over }) => {
-      const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+      // const item = draggableBasicFieldItems.find((i) => i.id === active.id)
+      // if (item) return
 
       // Cancelled drag, but one of the basic field create items.
-      if (!over && item) {
-        const filteredSortItems = sortItems.filter((i) => i.id !== item.id)
-        if (filteredSortItems.length < sortItems.length) {
-          setSortItems(filteredSortItems)
-          setDraggableBasicFieldItems(generateDraggableFields())
-        }
-      }
+      // if (!over && item) {
+      //   const filteredSortItems = sortItems.filter((i) => i.id !== item.id)
+      //   if (filteredSortItems.length < sortItems.length) {
+      //     setSortItems(filteredSortItems)
+      //     setDraggableBasicFieldItems(generateDraggableFields())
+      //   }
+      // }
 
       if (over) {
-        if (item) {
-          setDraggableBasicFieldItems(generateDraggableFields())
-          setCurrentSelectedField(item)
-        }
+        // if (item) {
+        //   return
+        // setDraggableBasicFieldItems(generateDraggableFields())
+        // setCurrentSelectedField(item)
+        // }
         const activeIndex = sortItems.findIndex((i) => i.id === active.id)
         const overIndex = sortItems.findIndex((i) => i.id === over.id)
         if (activeIndex !== overIndex) {
-          setSortItems((items) => {
-            const nextSortItems = items.map(removeIsCreate)
-            return overIndex !== activeIndex
-              ? arrayMove(nextSortItems, activeIndex, overIndex)
-              : nextSortItems
-          })
+          setSortItems((items) => arrayMove(items, activeIndex, overIndex))
+
           mutateReorderField.mutate(
             {
               fieldId: active.id,
@@ -201,7 +203,7 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
 
       setCurrentDragItem(null)
     },
-    [draggableBasicFieldItems, mutateReorderField, sortItems],
+    [mutateReorderField, sortItems],
   )
 
   return {

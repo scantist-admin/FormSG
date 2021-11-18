@@ -1,4 +1,4 @@
-import { BasicField } from '~shared/types/field'
+import { FormField, FormFieldWithId } from '~shared/types/field'
 
 export enum BuilderTabs {
   Builder,
@@ -6,9 +6,14 @@ export enum BuilderTabs {
   Logic,
 }
 
+export type FormBuilderField<T = FormField> = FormFieldWithId<T> & {
+  // Extra id key used for dndkit sorting.
+  id: string
+}
+
 export type DragItem = {
   id: string
-  fieldType: BasicField
+  fieldType: FormField['fieldType']
   isCreate?: boolean
 }
 

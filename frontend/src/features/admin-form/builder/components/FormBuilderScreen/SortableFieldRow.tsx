@@ -1,18 +1,18 @@
 import { useMemo } from 'react'
 import { BiDuplicate, BiGridHorizontal, BiTrash } from 'react-icons/bi'
-import { Box, ButtonGroup, Collapse, Flex, Icon, Text } from '@chakra-ui/react'
+import { Box, ButtonGroup, Collapse, Flex, Icon } from '@chakra-ui/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 import IconButton from '~components/IconButton'
 
-import { DragItem, FieldDropType } from '../../types'
+import { FieldDropType, FormBuilderField } from '../../types'
 import { FieldOption } from '../BuilderDrawer/DraggableField'
 
 import { useFormBuilder } from './FormBuilderContext'
 
 interface SortableFieldRowProps {
-  item: DragItem
+  item: FormBuilderField
 }
 export const SortableFieldRow = ({
   item,
@@ -44,26 +44,26 @@ export const SortableFieldRow = ({
     transition,
   }
 
-  if (isDragging && item.isCreate) {
-    return (
-      <Box
-        style={style}
-        ref={setNodeRef}
-        {...listeners}
-        {...attributes}
-        py="1.5rem"
-        px="2.5rem"
-        bg="primary.200"
-        border="1px solid"
-        borderColor="primary.500"
-        textAlign="center"
-      >
-        <Text textStyle="subhead-2" color="primary.400">
-          Drop your field here
-        </Text>
-      </Box>
-    )
-  }
+  // if (isDragging && item.isCreate) {
+  //   return (
+  //     <Box
+  //       style={style}
+  //       ref={setNodeRef}
+  //       {...listeners}
+  //       {...attributes}
+  //       py="1.5rem"
+  //       px="2.5rem"
+  //       bg="primary.200"
+  //       border="1px solid"
+  //       borderColor="primary.500"
+  //       textAlign="center"
+  //     >
+  //       <Text textStyle="subhead-2" color="primary.400">
+  //         Drop your field here
+  //       </Text>
+  //     </Box>
+  //   )
+  // }
 
   if (isDragging) {
     return (
