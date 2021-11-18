@@ -172,7 +172,6 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
         const activeIndex = sortItems.findIndex((i) => i.id === active.id)
         const overIndex = sortItems.findIndex((i) => i.id === over.id)
         if (activeIndex !== overIndex) {
-          const previousSortItems = sortItems.slice()
           setSortItems((items) => {
             const nextSortItems = items.map(removeIsCreate)
             return overIndex !== activeIndex
@@ -185,8 +184,15 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
               newPosition: overIndex,
             },
             {
-              onError: () => {
-                setSortItems(previousSortItems)
+              onError: (_err, _vars, context) => {
+                if (context?.previousFormState) {
+                  setSortItems(
+                    context.previousFormState.form_fields.map((field) => ({
+                      ...field,
+                      id: field._id,
+                    })),
+                  )
+                }
               },
             },
           )
