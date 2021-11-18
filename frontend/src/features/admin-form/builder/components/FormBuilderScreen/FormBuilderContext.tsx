@@ -14,6 +14,7 @@ import { pick } from 'lodash'
 
 import { useAdminForm } from '~features/admin-form/common/queries'
 
+import { useBuilderPage } from '../../BuilderPageContext'
 import { DragItem, FieldDropType } from '../../types'
 
 import { generateDraggableFields } from './utils/generateDraggableFields'
@@ -30,6 +31,10 @@ type FormBuilderContextProps = {
 
   sortItems: DragItem[]
   currentDragItem: DragItem | null
+
+  currentSelectedField: DragItem | null
+  handleFieldClick: (field: DragItem) => void
+  setCurrentSelectedField: Dispatch<SetStateAction<DragItem | null>>
 
   isLoading: boolean
 }
@@ -65,11 +70,14 @@ export const useFormBuilder = (): FormBuilderContextProps => {
 // Provider hook that creates builder object and handles build state
 const useProvideFormBuilder = (): FormBuilderContextProps => {
   const { data, isLoading } = useAdminForm()
+  const { handleBuilderClick } = useBuilderPage()
 
   const [draggableBasicFieldItems, setDraggableBasicFieldItems] = useState(
     generateDraggableFields,
   )
   const [currentDragItem, setCurrentDragItem] = useState<DragItem | null>(null)
+  const [currentSelectedField, setCurrentSelectedField] =
+    useState<DragItem | null>(null)
   const [sortItems, setSortItems] = useState<DragItem[]>([])
 
   useEffect(() => {
@@ -79,6 +87,14 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
       )
     }
   }, [data])
+
+  const handleFieldClick = useCallback(
+    (field: DragItem) => {
+      handleBuilderClick()
+      setCurrentSelectedField(field)
+    },
+    [handleBuilderClick],
+  )
 
   const handleDragStart: DndContextProps['onDragStart'] = useCallback(
     ({ active }: DragStartEvent) => {
@@ -141,6 +157,7 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
       if (over) {
         if (item) {
           setDraggableBasicFieldItems(generateDraggableFields())
+          setCurrentSelectedField(item)
         }
         const activeIndex = sortItems.findIndex((i) => i.id === active.id)
         const overIndex = sortItems.findIndex((i) => i.id === over.id)
@@ -151,6 +168,7 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
             : nextSortItems
         })
       }
+
       setCurrentDragItem(null)
     },
     [draggableBasicFieldItems, sortItems],
@@ -165,6 +183,9 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
     handleDragEnd,
     sortItems,
     currentDragItem,
+    currentSelectedField,
+    setCurrentSelectedField,
+    handleFieldClick,
     isLoading,
   }
 }

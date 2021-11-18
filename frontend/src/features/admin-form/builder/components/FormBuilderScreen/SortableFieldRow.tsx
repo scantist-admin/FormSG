@@ -1,5 +1,5 @@
 import { BiGridHorizontal } from 'react-icons/bi'
-import { Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Box, Flex, Icon, Text, useOutsideClick } from '@chakra-ui/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -14,7 +14,12 @@ interface SortableFieldRowProps {
 export const SortableFieldRow = ({
   item,
 }: SortableFieldRowProps): JSX.Element => {
-  const { isLoading } = useFormBuilder()
+  const {
+    isLoading,
+    currentSelectedField,
+    setCurrentSelectedField,
+    handleFieldClick,
+  } = useFormBuilder()
   const {
     listeners,
     setNodeRef,
@@ -22,12 +27,22 @@ export const SortableFieldRow = ({
     attributes,
     transition,
     isDragging,
+    node,
   } = useSortable({
     disabled: isLoading,
     id: item.id,
     data: {
       ...item,
       type: FieldDropType.Reorder,
+    },
+  })
+
+  useOutsideClick({
+    ref: node,
+    handler: () => {
+      if (currentSelectedField?.id === item.id) {
+        setCurrentSelectedField(null)
+      }
     },
   })
 
@@ -75,9 +90,14 @@ export const SortableFieldRow = ({
     <Flex
       bg="secondary.100"
       borderRadius="4px"
+      {...(currentSelectedField?.id === item.id ? { 'data-active': true } : {})}
       _focusWithin={{
         boxShadow: '0 0 0 2px var(--chakra-colors-primary-500)',
       }}
+      _active={{
+        boxShadow: '0 0 0 2px var(--chakra-colors-primary-500)',
+      }}
+      onClick={() => handleFieldClick(item)}
       style={style}
       px="2.5rem"
       ref={setNodeRef}

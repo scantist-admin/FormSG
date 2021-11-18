@@ -37,6 +37,11 @@ interface BuilderDrawerContentProps {
 const BuilderDrawerBuilderContent = ({
   isLoading,
 }: BuilderDrawerContentProps): JSX.Element => {
+  const { currentSelectedField } = useFormBuilder()
+  if (currentSelectedField) {
+    return <Box>{JSON.stringify(currentSelectedField)}</Box>
+  }
+
   return (
     <Tabs pos="relative" h="100%" display="flex" flexDir="column">
       <Box pt="1rem" px="1.5rem" bg="white">
