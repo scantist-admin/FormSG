@@ -42,7 +42,7 @@ export const EditFieldDrawer = (): JSX.Element | null => {
         <Box m="auto">Edit {field.fieldType}</Box>
         <BuilderDrawerCloseButton />
       </Flex>
-      <Flex flexDir="column">
+      <Flex flexDir="column" py="2rem" px="1.5rem">
         <MemoFieldDrawerContent field={field} />
       </Flex>
     </Box>
