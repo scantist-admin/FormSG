@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { memo } from 'react'
 import { BiLeftArrowAlt } from 'react-icons/bi'
 import { Box, Flex } from '@chakra-ui/react'
 
 import { BasicField } from '~shared/types/field'
 
 import IconButton from '~components/IconButton'
+
+import { FormBuilderField } from '~features/admin-form/builder/types'
 
 import { useFormBuilder } from '../../FormBuilderScreen/FormBuilderContext'
 import { BuilderDrawerCloseButton } from '../BuilderDrawerCloseButton'
@@ -14,16 +16,6 @@ import { EditHeader } from './EditHeader'
 export const EditFieldDrawer = (): JSX.Element | null => {
   const { setCurrentSelectedField, currentSelectedField: field } =
     useFormBuilder()
-
-  const fieldToRender = useMemo(() => {
-    if (!field) return null
-    switch (field.fieldType) {
-      case BasicField.Section:
-        return <EditHeader field={field} />
-      default:
-        return <div>TODO: Insert field options here</div>
-    }
-  }, [field])
 
   if (!field) return null
 
@@ -50,7 +42,20 @@ export const EditFieldDrawer = (): JSX.Element | null => {
         <Box m="auto">Edit {field.fieldType}</Box>
         <BuilderDrawerCloseButton />
       </Flex>
-      <Flex flexDir="column">{fieldToRender}</Flex>
+      <Flex flexDir="column">
+        <MemoFieldDrawerContent field={field} />
+      </Flex>
     </Box>
   )
 }
+
+const MemoFieldDrawerContent = memo(
+  ({ field }: { field: FormBuilderField }) => {
+    switch (field.fieldType) {
+      case BasicField.Section:
+        return <EditHeader field={field} />
+      default:
+        return <div>TODO: Insert field options here</div>
+    }
+  },
+)
