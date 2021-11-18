@@ -15,6 +15,7 @@ import { pick } from 'lodash'
 import { useAdminForm } from '~features/admin-form/common/queries'
 
 import { useBuilderPage } from '../../BuilderPageContext'
+import { useMutateAdminForm } from '../../mutations'
 import { DragItem, FieldDropType } from '../../types'
 
 import { generateDraggableFields } from './utils/generateDraggableFields'
@@ -79,6 +80,8 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
   const [currentSelectedField, setCurrentSelectedField] =
     useState<DragItem | null>(null)
   const [sortItems, setSortItems] = useState<DragItem[]>([])
+
+  const { mutateReorderField } = useMutateAdminForm()
 
   useEffect(() => {
     if (data) {
@@ -161,17 +164,31 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
         }
         const activeIndex = sortItems.findIndex((i) => i.id === active.id)
         const overIndex = sortItems.findIndex((i) => i.id === over.id)
-        setSortItems((items) => {
-          const nextSortItems = items.map(removeIsCreate)
-          return overIndex !== activeIndex
-            ? arrayMove(nextSortItems, activeIndex, overIndex)
-            : nextSortItems
-        })
+        if (activeIndex !== overIndex) {
+          const previousSortItems = sortItems.slice()
+          setSortItems((items) => {
+            const nextSortItems = items.map(removeIsCreate)
+            return overIndex !== activeIndex
+              ? arrayMove(nextSortItems, activeIndex, overIndex)
+              : nextSortItems
+          })
+          mutateReorderField.mutate(
+            {
+              fieldId: active.id,
+              newPosition: overIndex,
+            },
+            {
+              onError: () => {
+                setSortItems(previousSortItems)
+              },
+            },
+          )
+        }
       }
 
       setCurrentDragItem(null)
     },
-    [draggableBasicFieldItems, sortItems],
+    [draggableBasicFieldItems, mutateReorderField, sortItems],
   )
 
   return {
