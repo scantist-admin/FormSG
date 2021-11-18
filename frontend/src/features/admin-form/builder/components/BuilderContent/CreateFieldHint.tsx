@@ -1,15 +1,11 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
-import { useDroppable } from '@dnd-kit/core'
 
 import { BxsWidget } from '~assets/icons/BxsWidget'
 
 import { useBuilderPage } from '../../BuilderPageContext'
 
-export const CreateFieldDropzone = (): JSX.Element => {
+export const CreateFieldHint = (): JSX.Element => {
   const { handleBuilderClick } = useBuilderPage()
-  const { isOver, setNodeRef } = useDroppable({
-    id: 'create-field-dropzone',
-  })
 
   return (
     <Flex
@@ -23,15 +19,12 @@ export const CreateFieldDropzone = (): JSX.Element => {
       border="1px dashed"
       borderColor="secondary.300"
       borderRadius="0.25rem"
-      bg={isOver ? 'primary.200' : 'neutral.100'}
+      bg="neutral.100"
       onClick={handleBuilderClick}
-      ref={setNodeRef}
     >
       <Icon as={BxsWidget} fontSize="2rem" />
       <Text textStyle="subhead-2">
-        {isOver
-          ? 'Drop your field here'
-          : 'Drag a field from the Builder on the left to start'}
+        Drag a field from the Builder on the left to start
       </Text>
     </Flex>
   )

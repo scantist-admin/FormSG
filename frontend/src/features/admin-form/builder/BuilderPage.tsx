@@ -1,4 +1,5 @@
-import { useState } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { BiGridHorizontal } from 'react-icons/bi'
 import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
@@ -8,6 +9,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { omit, pick } from 'lodash'
 
 import { BuilderContent } from './components/BuilderContent'
+import { CreateFieldHint } from './components/BuilderContent/CreateFieldHint'
 import { BuilderDrawer } from './components/BuilderDrawer'
 import { FieldOption } from './components/BuilderDrawer/DraggableField'
 import { BuilderSidebar } from './components/BuilderSidebar'
@@ -24,6 +26,11 @@ export const BuilderPage = (): JSX.Element => {
     useBuilderPage()
 
   const [sortItems, setSortItems] = useState<DragItem[]>([])
+
+  const showDropzone = useMemo(() => {
+    if (sortItems.length === 0) return true
+    return false
+  }, [sortItems])
 
   return (
     <DndContext
@@ -86,15 +93,15 @@ export const BuilderPage = (): JSX.Element => {
       <Flex h="100%" w="100%" overflow="auto" bg="neutral.200" direction="row">
         <BuilderSidebar />
         <BuilderDrawer />
-        <BuilderContent>
-          <SortableContext items={sortItems} id="sortList">
-            <SortArea>
-              {sortItems.map((item) => (
-                <SortItem key={item.id} item={item} />
-              ))}
-            </SortArea>
-          </SortableContext>
-        </BuilderContent>
+        <SortableContext items={sortItems} id="sortList">
+          <BuilderContent>
+            {showDropzone ? (
+              <CreateFieldHint />
+            ) : (
+              sortItems.map((item) => <SortItem key={item.id} item={item} />)
+            )}
+          </BuilderContent>
+        </SortableContext>
       </Flex>
       {createPortal(
         <DragOverlay>
@@ -114,7 +121,7 @@ const SortArea = (props: any) => {
   })
 
   return (
-    <Box ref={setNodeRef} flex={1}>
+    <Box ref={setNodeRef}>
       <Stack spacing="2.25rem">{children}</Stack>
     </Box>
   )
