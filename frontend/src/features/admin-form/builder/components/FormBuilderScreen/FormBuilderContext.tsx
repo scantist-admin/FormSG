@@ -5,11 +5,14 @@ import {
   SetStateAction,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 import { DndContextProps, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { pick } from 'lodash'
+
+import { useAdminForm } from '~features/admin-form/common/queries'
 
 import { DragItem, FieldDropType } from '../../types'
 
@@ -27,6 +30,8 @@ type FormBuilderContextProps = {
 
   sortItems: DragItem[]
   currentDragItem: DragItem | null
+
+  isLoading: boolean
 }
 
 const FormBuilderContext = createContext<FormBuilderContextProps | undefined>(
@@ -59,11 +64,21 @@ export const useFormBuilder = (): FormBuilderContextProps => {
 
 // Provider hook that creates builder object and handles build state
 const useProvideFormBuilder = (): FormBuilderContextProps => {
+  const { data, isLoading } = useAdminForm()
+
   const [draggableBasicFieldItems, setDraggableBasicFieldItems] = useState(
     generateDraggableFields,
   )
   const [currentDragItem, setCurrentDragItem] = useState<DragItem | null>(null)
   const [sortItems, setSortItems] = useState<DragItem[]>([])
+
+  useEffect(() => {
+    if (data) {
+      setSortItems(
+        data.form_fields.map((field) => ({ ...field, id: field._id })),
+      )
+    }
+  }, [data])
 
   const handleDragStart: DndContextProps['onDragStart'] = useCallback(
     ({ active }: DragStartEvent) => {
@@ -150,5 +165,6 @@ const useProvideFormBuilder = (): FormBuilderContextProps => {
     handleDragEnd,
     sortItems,
     currentDragItem,
+    isLoading,
   }
 }

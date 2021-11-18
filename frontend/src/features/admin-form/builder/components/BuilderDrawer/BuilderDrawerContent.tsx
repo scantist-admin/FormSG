@@ -21,15 +21,22 @@ import { DraggableFieldOption } from './DraggableField'
 
 export const BuilderDrawerContent = (): JSX.Element | null => {
   const { activeTab } = useBuilderPage()
+  const { isLoading } = useFormBuilder()
 
   if (activeTab === BuilderTabs.Logic) return null
 
   if (activeTab === BuilderTabs.Design) return null
 
-  return <BuilderDrawerBuilderContent />
+  return <BuilderDrawerBuilderContent isLoading={isLoading} />
 }
 
-const BuilderDrawerBuilderContent = (): JSX.Element => {
+interface BuilderDrawerContentProps {
+  isLoading: boolean
+}
+
+const BuilderDrawerBuilderContent = ({
+  isLoading,
+}: BuilderDrawerContentProps): JSX.Element => {
   return (
     <Tabs pos="relative" h="100%" display="flex" flexDir="column">
       <Box pt="1rem" px="1.5rem" bg="white">
@@ -37,14 +44,14 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
           Builder
         </Text>
         <TabList mx="-1rem" w="100%">
-          <Tab>Basic</Tab>
-          <Tab>MyInfo</Tab>
+          <Tab isDisabled={isLoading}>Basic</Tab>
+          <Tab isDisabled={isLoading}>MyInfo</Tab>
         </TabList>
         <Divider w="auto" mx="-1.5rem" />
       </Box>
       <TabPanels pb="1rem" flex={1} overflowY="auto">
         <TabPanel>
-          <BasicFieldPanelContent />
+          <BasicFieldPanelContent isLoading={isLoading} />
         </TabPanel>
         <TabPanel>MyInfo</TabPanel>
       </TabPanels>
@@ -52,7 +59,7 @@ const BuilderDrawerBuilderContent = (): JSX.Element => {
   )
 }
 
-const BasicFieldPanelContent = () => {
+const BasicFieldPanelContent = ({ isLoading }: BuilderDrawerContentProps) => {
   const { draggableBasicFieldItems } = useFormBuilder()
 
   const pageFieldOptions = useMemo(
@@ -68,12 +75,20 @@ const BasicFieldPanelContent = () => {
     <Box>
       <FieldSection label="Page">
         {pageFieldOptions.map((props) => (
-          <DraggableFieldOption key={props.id} {...props} />
+          <DraggableFieldOption
+            isDisabled={isLoading}
+            key={props.id}
+            {...props}
+          />
         ))}
       </FieldSection>
       <FieldSection label="Fields">
         {fieldFieldOptions.map((props) => (
-          <DraggableFieldOption key={props.id} {...props} />
+          <DraggableFieldOption
+            isDisabled={isLoading}
+            key={props.id}
+            {...props}
+          />
         ))}
       </FieldSection>
     </Box>
@@ -98,6 +113,7 @@ const FieldSection = ({
         pos="sticky"
         top={0}
         bg="white"
+        zIndex="docked"
       >
         {label}
       </Text>

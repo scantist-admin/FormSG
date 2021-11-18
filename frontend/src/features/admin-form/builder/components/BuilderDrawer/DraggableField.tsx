@@ -38,6 +38,7 @@ import { FieldDropType } from '../../types'
 
 interface DraggableFieldOptionProps extends FieldOptionProps {
   id: string
+  isDisabled: boolean
 }
 
 const FIELDS_TO_META: Record<BasicField, { label: string; icon: As }> = {
@@ -127,9 +128,11 @@ const FIELDS_TO_META: Record<BasicField, { label: string; icon: As }> = {
 export const DraggableFieldOption = ({
   fieldType,
   id,
+  isDisabled,
 }: DraggableFieldOptionProps): JSX.Element => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
+    disabled: isDisabled,
     data: {
       type: FieldDropType.Create,
       id,
@@ -142,6 +145,7 @@ export const DraggableFieldOption = ({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      isDisabled={isDisabled}
       isDragging={isDragging}
       fieldType={fieldType}
     />
@@ -152,15 +156,23 @@ interface FieldOptionProps extends BoxProps {
   fieldType: BasicField
   isDragOverlay?: boolean
   isDragging?: boolean
+  isDisabled?: boolean
 }
 
 export const FieldOption = forwardRef<FieldOptionProps, 'div'>(
-  ({ fieldType, isDragOverlay, isDragging, ...props }, ref) => {
+  ({ fieldType, isDragOverlay, isDragging, isDisabled, ...props }, ref) => {
     const meta = useMemo(() => FIELDS_TO_META[fieldType], [fieldType])
 
     return (
       <Box
         px="1.5rem"
+        {...(isDisabled ? { 'data-disabled': true } : {})}
+        _disabled={{
+          opacity: 0.5,
+          cursor: 'not-allowed',
+          _hover: { bg: 'white' },
+          _focus: { bg: 'white' },
+        }}
         _hover={{ bg: isDragOverlay ? 'white' : 'primary.100' }}
         _focus={{ bg: 'primary.200' }}
         bg="white"

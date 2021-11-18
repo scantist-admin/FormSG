@@ -6,12 +6,15 @@ import { CSS } from '@dnd-kit/utilities'
 import { DragItem, FieldDropType } from '../../types'
 import { FieldOption } from '../BuilderDrawer/DraggableField'
 
+import { useFormBuilder } from './FormBuilderContext'
+
 interface SortableFieldRowProps {
   item: DragItem
 }
 export const SortableFieldRow = ({
   item,
 }: SortableFieldRowProps): JSX.Element => {
+  const { isLoading } = useFormBuilder()
   const {
     listeners,
     setNodeRef,
@@ -20,6 +23,7 @@ export const SortableFieldRow = ({
     transition,
     isDragging,
   } = useSortable({
+    disabled: isLoading,
     id: item.id,
     data: {
       ...item,
