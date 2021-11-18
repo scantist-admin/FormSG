@@ -1,7 +1,10 @@
-import { BiGridHorizontal } from 'react-icons/bi'
-import { Box, Flex, Icon, Text, useOutsideClick } from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { BiDuplicate, BiGridHorizontal, BiTrash } from 'react-icons/bi'
+import { Box, ButtonGroup, Collapse, Flex, Icon, Text } from '@chakra-ui/react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+
+import IconButton from '~components/IconButton'
 
 import { DragItem, FieldDropType } from '../../types'
 import { FieldOption } from '../BuilderDrawer/DraggableField'
@@ -14,12 +17,7 @@ interface SortableFieldRowProps {
 export const SortableFieldRow = ({
   item,
 }: SortableFieldRowProps): JSX.Element => {
-  const {
-    isLoading,
-    currentSelectedField,
-    setCurrentSelectedField,
-    handleFieldClick,
-  } = useFormBuilder()
+  const { isLoading, currentSelectedField, handleFieldClick } = useFormBuilder()
   const {
     listeners,
     setNodeRef,
@@ -27,7 +25,6 @@ export const SortableFieldRow = ({
     attributes,
     transition,
     isDragging,
-    node,
   } = useSortable({
     disabled: isLoading,
     id: item.id,
@@ -37,14 +34,10 @@ export const SortableFieldRow = ({
     },
   })
 
-  useOutsideClick({
-    ref: node,
-    handler: () => {
-      if (currentSelectedField?.id === item.id) {
-        setCurrentSelectedField(null)
-      }
-    },
-  })
+  const isActive = useMemo(
+    () => currentSelectedField?.id === item.id,
+    [currentSelectedField?.id, item.id],
+  )
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -88,9 +81,9 @@ export const SortableFieldRow = ({
 
   return (
     <Flex
-      bg="secondary.100"
+      bg={isActive ? 'secondary.100' : 'white'}
       borderRadius="4px"
-      {...(currentSelectedField?.id === item.id ? { 'data-active': true } : {})}
+      {...(isActive ? { 'data-active': true } : {})}
       _focusWithin={{
         boxShadow: '0 0 0 2px var(--chakra-colors-primary-500)',
       }}
@@ -99,7 +92,6 @@ export const SortableFieldRow = ({
       }}
       onClick={() => handleFieldClick(item)}
       style={style}
-      px="2.5rem"
       ref={setNodeRef}
       flexDir="column"
       align="center"
@@ -116,7 +108,28 @@ export const SortableFieldRow = ({
           color: 'secondary.300',
         }}
       />
-      {item.fieldType}
+      {/* TODO: Render the field */}
+      <Box>{item.fieldType}</Box>
+      <Collapse in={isActive} style={{ width: '100%' }}>
+        <Flex
+          px="1.5rem"
+          flex={1}
+          borderTop="1px solid var(--chakra-colors-neutral-300)"
+          justify="end"
+        >
+          <ButtonGroup variant="clear" colorScheme="secondary" spacing={0}>
+            <IconButton
+              aria-label="Duplicate field"
+              icon={<BiDuplicate fontSize="1.25rem" />}
+            />
+            <IconButton
+              colorScheme="danger"
+              aria-label="Delete field"
+              icon={<BiTrash fontSize="1.25rem" />}
+            />
+          </ButtonGroup>
+        </Flex>
+      </Collapse>
     </Flex>
   )
 }
