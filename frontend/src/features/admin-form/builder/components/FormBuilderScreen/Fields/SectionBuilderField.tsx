@@ -4,6 +4,8 @@ import { BaseSectionField } from '~templates/Field/Section'
 
 import { FormBuilderField } from '~features/admin-form/builder/types'
 
+import { BuilderFieldContainer } from './BuilderFieldContainer'
+
 export interface SectionBuilderFieldProps {
   field: FormBuilderField<SectionFieldBase>
 }
@@ -11,5 +13,9 @@ export interface SectionBuilderFieldProps {
 export const SectionBuilderField = ({
   field,
 }: SectionBuilderFieldProps): JSX.Element => {
-  return <BaseSectionField schema={field} />
+  return (
+    <BuilderFieldContainer field={field}>
+      {({ schema }) => <BaseSectionField schema={schema} />}
+    </BuilderFieldContainer>
+  )
 }
