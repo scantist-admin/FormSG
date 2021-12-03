@@ -23,6 +23,7 @@ import { useDraggable } from '~hooks/useDraggable'
 import { SettingsTab } from './components/SettingsTab'
 import { SettingsAuthPage } from './SettingsAuthPage'
 import { SettingsGeneralPage } from './SettingsGeneralPage'
+import { SettingsWebhookPage } from './SettingsWebhookPage'
 
 export const SettingsPage = (): JSX.Element => {
   const tabOrientation: UseTabsProps['orientation'] = useBreakpointValue({
@@ -105,7 +106,7 @@ export const SettingsPage = (): JSX.Element => {
             <p>4!</p>
           </TabPanel>
           <TabPanel>
-            <p>5!</p>
+            <SettingsWebhookPage />
           </TabPanel>
           <TabPanel>
             <p>6!</p>
