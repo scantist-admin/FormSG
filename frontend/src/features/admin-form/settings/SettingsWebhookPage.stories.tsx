@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import { SettingsWebhookPage } from './SettingsWebhookPage'
 
 export default {
-  title: 'Components/SettingsWebhookPage',
+  title: 'Pages/AdminFormPage/Settings/SettingsTab',
   component: SettingsWebhookPage,
   decorators: [],
 } as Meta
