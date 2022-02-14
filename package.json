@@ -16,7 +16,7 @@
     "npm": "~6.4.0"
   },
   "scripts": {
-    "postinstall": "cd shared && npm install",
+    "postinstall": "npx husky-init && cd shared && npm install",
     "test-backend": "env-cmd -f tests/.test-env jest --coverage --maxWorkers=4",
     "test-backend:watch": "env-cmd -f tests/.test-env jest --watch",
     "test-frontend": "jest --config=tests/unit/frontend/jest.config.js",
@@ -42,7 +42,7 @@
     "lint-ci": "concurrently \"eslint src/ --quiet\" \"stylelint '*/**/*.css' --quiet\" \"htmlhint\" \"prettier --c './src/public/**/*.html' --ignore-path './dist/**'\"",
     "version": "auto-changelog -p && git add CHANGELOG.md",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --fix",
