@@ -11,10 +11,6 @@ import { ExtractTypeFromArray } from '../types/utils'
  * If initial `fromIndex` is out of bounds of the original array, no reordering
  * will be performed and the initial array will be returned.
  *
- * Function retrieved from
- * https://github.com/granteagon/move/blob/master/src/index.js and converted to
- * TypeScript and renamed for clarity.
- *
  * @param array initial array to reorder
  * @param fromIndex the current index of the element to move
  * @param toIndex the new index to move the element to
@@ -31,33 +27,15 @@ export const reorder = <T>(
    * given array may contain undefined elements and will not be a comprehensive
    * validity check.
    */
-  if (fromIndex < 0 || fromIndex >= array.length) {
+  if (fromIndex < 0 || fromIndex >= array.length || fromIndex === toIndex) {
     return array
   }
 
-  const elementToMove = array[fromIndex]
+  const copy = Array.from(array)
+  const removed = copy.splice(fromIndex, 1)
+  copy.splice(toIndex, 0, ...removed)
 
-  const diff = fromIndex - toIndex
-
-  if (diff > 0) {
-    // Reorder to the left.
-    return [
-      ...array.slice(0, toIndex),
-      elementToMove,
-      ...array.slice(toIndex, fromIndex),
-      ...array.slice(fromIndex + 1, array.length),
-    ]
-  } else if (diff < 0) {
-    // Reorder to the right.
-    const targetIndex = toIndex + 1
-    return [
-      ...array.slice(0, fromIndex),
-      ...array.slice(fromIndex + 1, targetIndex),
-      elementToMove,
-      ...array.slice(targetIndex, array.length),
-    ]
-  }
-  return array
+  return copy
 }
 
 /**
