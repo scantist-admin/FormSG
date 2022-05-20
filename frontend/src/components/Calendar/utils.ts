@@ -56,3 +56,14 @@ export function isMonthInRange({ date, minDate, maxDate }: IsMonthInRangeArgs) {
   const minInRange = hasMinDate ? endOfMonth.isAfter(minDate) : true
   return maxInRange && minInRange
 }
+
+export const getDecadeRange = (year: number) => {
+  const rounded = year - (year % 10) - 1
+  const range: number[] = []
+  for (let i = 0; i < 12; i += 1) {
+    const rangeYear = rounded + i
+    range.push(rangeYear)
+  }
+
+  return range
+}

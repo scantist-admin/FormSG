@@ -1,50 +1,61 @@
-import { Box } from '@chakra-ui/react'
+import { useMemo, useState } from 'react'
+import { SimpleGrid } from '@chakra-ui/react'
+
+import Button from '~components/Button'
 
 import { CalendarHeader } from './CalendarHeader'
-import { DayKeydownPayload, MonthSettings } from './types'
+import { getDecadeRange } from './utils'
 
-interface YearPickerProps extends MonthSettings {
-  amountOfMonths: number
-  month: Date
-  allowLevelChange: boolean
-  daysRefs: React.RefObject<HTMLButtonElement[][][]>
-  onMonthChange(month: Date): void
+interface YearPickerProps {
+  monthDate: Date
+  onChange(value: number): void
+  minYear?: number
+  maxYear?: number
+  nextDecadeLabel?: string
+  previousDecadeLabel?: string
+  preventFocus?: boolean
   onMonthLevel(): void
   onYearLevel(): void
-  onDayKeyDown(
-    monthIndex: number,
-    payload: DayKeydownPayload,
-    event: React.KeyboardEvent<HTMLButtonElement>,
-  ): void
-  nextMonthLabel?: string
-  previousMonthLabel?: string
-  labelFormat?: string
-  weekdayLabelFormat?: string
-  renderDay?(date: Date): React.ReactNode
-  /** Selected date or an array of selected dates */
-  value?: Date | Date[]
-  /** Selected range */
-  range?: [Date, Date]
-  /** Called when day is selected */
-  onChange?(value: Date): void
-  /** Called when onMouseEnter event fired on day button */
-  onDayMouseEnter?(date: Date, event: React.MouseEvent): void
 }
 
 export const YearPicker = ({
+  monthDate,
+  minYear,
+  maxYear,
+  onChange,
   onMonthLevel,
   onYearLevel,
 }: YearPickerProps): JSX.Element => {
+  const initialYear = useMemo(() => monthDate.getFullYear(), [monthDate])
+  const [decade, setDecade] = useState(initialYear)
+  const range = useMemo(() => getDecadeRange(decade), [decade])
   return (
     <>
       <CalendarHeader
+        hasPrevious={minYear ? minYear < range[0] : true}
+        hasNext={maxYear ? maxYear > range[range.length - 1] : true}
+        onNext={() => setDecade((current) => current + 10)}
+        onPrevious={() => setDecade((current) => current - 10)}
+        onYearLevel={onYearLevel}
         onMonthLevel={onMonthLevel}
-        monthDate={new Date()}
+        monthDate={monthDate}
         locale="en"
-        hasNext
-        hasPrevious
       />
-      <Box>Year view</Box>
+      <SimpleGrid columns={4}>
+        {range.map((year) => (
+          <Button
+            variant={year === initialYear ? 'solid' : 'clear'}
+            colorScheme={year === initialYear ? 'primary' : 'secondary'}
+            key={year}
+            onClick={() => onChange(year)}
+            isDisabled={
+              (!!minYear && year < minYear) || (!!maxYear && year > maxYear)
+            }
+          >
+            {year}
+          </Button>
+        ))}
+      </SimpleGrid>
     </>
   )
 }

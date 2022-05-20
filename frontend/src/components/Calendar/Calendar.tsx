@@ -95,6 +95,8 @@ export const Calendar = ({
   previousMonthLabel,
   nextYearLabel,
   previousYearLabel,
+  nextDecadeLabel,
+  previousDecadeLabel,
   labelFormat,
   weekdayLabelFormat,
   renderDay,
@@ -117,7 +119,6 @@ export const Calendar = ({
     defaultValue: initialMonth ?? new Date(),
     onChange: onMonthChange,
   })
-  const [yearSelection, setYearSelection] = useState(_month.getFullYear())
   const minYear = minDate instanceof Date ? minDate.getFullYear() : 0
   const maxYear = maxDate instanceof Date ? maxDate.getFullYear() : 10000
 
@@ -186,35 +187,18 @@ export const Calendar = ({
       <Box sx={styles.container}>
         {selectionState === 'year' && (
           <YearPicker
-            amountOfMonths={amountOfMonths}
-            month={_month}
-            minDate={minDate}
-            maxDate={maxDate}
-            allowLevelChange={allowLevelChange}
-            daysRefs={daysRefs}
-            onMonthChange={setMonth}
+            monthDate={_month}
+            minYear={minYear}
+            maxYear={maxYear}
             onMonthLevel={() => setSelectionState('month')}
-            onYearLevel={() => setSelectionState('year')}
-            onDayKeyDown={handleDayKeyDown}
-            disableOutsideEvents={disableOutsideEvents}
-            excludeDate={excludeDate}
-            hideWeekdays={hideWeekdays}
-            fullWidth={fullWidth}
+            onYearLevel={() => setSelectionState('date')}
+            onChange={(year) => {
+              setMonth(new Date(year, _month.getMonth(), 1))
+              setSelectionState('month')
+            }}
+            nextDecadeLabel={nextDecadeLabel}
+            previousDecadeLabel={previousDecadeLabel}
             preventFocus={preventFocus}
-            firstDayOfWeek={firstDayOfWeek}
-            value={value}
-            range={range}
-            onChange={onChange}
-            nextMonthLabel={nextMonthLabel}
-            previousMonthLabel={previousMonthLabel}
-            labelFormat={labelFormat}
-            weekdayLabelFormat={weekdayLabelFormat}
-            onDayMouseEnter={onDayMouseEnter}
-            renderDay={renderDay}
-            hideOutsideDates={hideOutsideDates}
-            isDateInRange={isDateInRange}
-            isDateFirstInRange={isDateFirstInRange}
-            isDateLastInRange={isDateLastInRange}
           />
         )}
         {selectionState === 'month' && (
