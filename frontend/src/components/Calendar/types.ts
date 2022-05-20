@@ -1,4 +1,5 @@
-export type FirstDayOfWeek = 'sunday' | 'monday'
+/** First day of the week. `0` = Sunday */
+export type FirstDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export interface DayKeydownPayload {
   weekIndex: number

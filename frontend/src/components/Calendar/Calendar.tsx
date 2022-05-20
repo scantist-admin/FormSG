@@ -9,6 +9,7 @@ import {
 import { MonthPicker } from './MonthPicker'
 import { MonthView } from './MonthView'
 import { DayKeydownPayload, MonthSettings } from './types'
+import { getTodayOffset } from './utils'
 import { YearPicker } from './YearPicker'
 
 export interface CalendarProps extends MonthSettings {
@@ -69,6 +70,9 @@ export interface CalendarProps extends MonthSettings {
   /** Previous decade control aria-label */
   previousDecadeLabel?: string
 
+  /** Today button aria-label */
+  todayButtonLabel?: string
+
   /** dayjs label format */
   labelFormat?: string
 
@@ -94,7 +98,7 @@ export const Calendar = ({
   hideWeekdays,
   fullWidth,
   preventFocus,
-  firstDayOfWeek,
+  firstDayOfWeek = 0,
   range,
   nextMonthLabel,
   previousMonthLabel,
@@ -102,6 +106,7 @@ export const Calendar = ({
   previousYearLabel,
   nextDecadeLabel,
   previousDecadeLabel,
+  todayButtonLabel,
   labelFormat,
   weekdayLabelFormat,
   renderDay,
@@ -132,6 +137,20 @@ export const Calendar = ({
   })
   const minYear = minDate instanceof Date ? minDate.getFullYear() : 0
   const maxYear = maxDate instanceof Date ? maxDate.getFullYear() : 10000
+
+  const handleTodayButtonClick = () => {
+    const { startOfMonth, weekOffset, dayOffset } =
+      getTodayOffset(firstDayOfWeek)
+    setMonth(startOfMonth)
+
+    const todayRef = daysRefs.current[0][weekOffset][dayOffset]
+    if (todayRef) {
+      // Adding focus-visible attributes to show focus ring regardless.
+      todayRef.classList.add('focus-visible')
+      todayRef.setAttribute('data-focus-visible-added', 'true')
+      todayRef.focus()
+    }
+  }
 
   const handleDayKeyDown = (
     monthIndex: number,
@@ -245,6 +264,7 @@ export const Calendar = ({
             onMonthChange={setMonth}
             onMonthLevel={() => setSelectionState('month')}
             onYearLevel={() => setSelectionState('year')}
+            onTodayClick={handleTodayButtonClick}
             onDayKeyDown={handleDayKeyDown}
             disableOutsideEvents={disableOutsideEvents}
             excludeDate={excludeDate}
@@ -257,6 +277,7 @@ export const Calendar = ({
             onChange={onChange}
             nextMonthLabel={nextMonthLabel}
             previousMonthLabel={previousMonthLabel}
+            todayButtonLabel={todayButtonLabel}
             labelFormat={labelFormat}
             weekdayLabelFormat={weekdayLabelFormat}
             onDayMouseEnter={onDayMouseEnter}

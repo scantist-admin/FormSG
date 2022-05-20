@@ -14,7 +14,8 @@ const parts = anatomy('calendar').parts(
   'grid', // grid of dates for a single month
   'dayNamesContainer', // container for names of days in the week
   'dayOfMonth', // container for single date
-  'todayLinkContainer', // container for "Today" link
+  'todayButtonContainer', // container for "Today" button
+  'todayButton', // "Today" button
 )
 
 const baseDayOfMonthStyles: SystemStyleFunction = ({
@@ -88,8 +89,8 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
         md: '3rem',
       },
     },
-    todayLinkContainer: {
-      py: '0.75rem',
+    todayButtonContainer: {
+      py: '0.375rem',
     },
   },
 }
@@ -127,8 +128,11 @@ export const Calendar: ComponentMultiStyleConfig<typeof parts> = {
         justifyContent: 'center',
       },
       dayOfMonth: baseDayOfMonthStyles(props),
-      todayLinkContainer: {
+      todayButtonContainer: {
         textAlign: 'center',
+      },
+      todayButton: {
+        colorScheme: props.colorScheme,
       },
     }
   },

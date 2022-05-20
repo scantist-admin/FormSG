@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 
 import { CalendarHeader } from './CalendarHeader'
 import { Month } from './Month'
+import { TodayButton } from './TodayButton'
 import { DayKeydownPayload, MonthSettings } from './types'
 import { isMonthInRange } from './utils'
 
@@ -13,6 +14,7 @@ interface MonthViewProps extends MonthSettings {
   allowLevelChange: boolean
   daysRefs: React.RefObject<HTMLButtonElement[][][]>
   onMonthChange(month: Date): void
+  onTodayClick(): void
   onMonthLevel(): void
   onYearLevel(): void
   onDayKeyDown(
@@ -22,6 +24,7 @@ interface MonthViewProps extends MonthSettings {
   ): void
   nextMonthLabel?: string
   previousMonthLabel?: string
+  todayButtonLabel?: string
   labelFormat?: string
   weekdayLabelFormat?: string
   renderDay?(date: Date): React.ReactNode
@@ -46,8 +49,10 @@ export const MonthView = ({
   maxDate,
   amountOfMonths,
   onMonthChange,
+  onTodayClick,
   nextMonthLabel,
   previousMonthLabel,
+  todayButtonLabel,
   preventFocus,
   renderDay,
   weekdayLabelFormat,
@@ -103,6 +108,10 @@ export const MonthView = ({
             renderDay={renderDay}
             weekdayLabelFormat={weekdayLabelFormat}
             {...rest}
+          />
+          <TodayButton
+            onClick={onTodayClick}
+            todayButtonLabel={todayButtonLabel}
           />
         </Box>
       )

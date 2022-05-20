@@ -1,3 +1,11 @@
+import {
+  differenceInDays,
+  differenceInWeeks,
+  endOfMonth,
+  endOfWeek,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns'
 import dayjs from 'dayjs'
 
 import { FirstDayOfWeek } from './types'
@@ -70,49 +78,14 @@ export const getDecadeRange = (year: number) => {
   return range
 }
 
-const getEndOfWeek = (
-  date: Date,
-  firstDayOfWeek: FirstDayOfWeek = 'monday',
-) => {
-  const value = new Date(date)
-  const day = value.getDay()
-  const isSunday = firstDayOfWeek === 'sunday'
-
-  const clampToLastDay = 7 - (isSunday ? day + 1 : day)
-
-  if ((isSunday && day !== 6) || day !== 0) {
-    value.setDate(value.getDate() + clampToLastDay)
-  }
-
-  return value
-}
-
-const getStartOfWeek = (
-  date: Date,
-  firstDayOfWeek: FirstDayOfWeek = 'monday',
-) => {
-  const value = new Date(date)
-  const day = value.getDay() || 7
-  const isSunday = firstDayOfWeek === 'sunday'
-
-  const clampToFirstDay = isSunday ? day : day - 1
-
-  if ((isSunday && day !== 0) || day !== 1) {
-    value.setHours(-24 * clampToFirstDay)
-  }
-
-  return value
-}
-
 export const getMonthDays = (
   month: Date,
-  firstDayOfWeek: FirstDayOfWeek = 'monday',
+  firstDayOfWeek: FirstDayOfWeek = 0,
 ): Date[][] => {
-  const currentMonth = month.getMonth()
-  const startOfMonth = new Date(month.getFullYear(), currentMonth, 1)
-  const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0)
-  const endDate = getEndOfWeek(endOfMonth, firstDayOfWeek)
-  const date = getStartOfWeek(startOfMonth, firstDayOfWeek)
+  const monthStart = startOfMonth(month)
+  const monthEnd = endOfMonth(month)
+  const endDate = endOfWeek(monthEnd, { weekStartsOn: firstDayOfWeek })
+  const date = startOfWeek(monthStart, { weekStartsOn: firstDayOfWeek })
   const weeks: Date[][] = []
 
   while (date <= endDate) {
@@ -131,11 +104,11 @@ export const getMonthDays = (
 
 export const getWeekdaysNames = (
   locale: string,
-  firstDayOfWeek: FirstDayOfWeek = 'monday',
+  firstDayOfWeek: FirstDayOfWeek = 0,
   format = 'dd',
 ) => {
   const names: string[] = []
-  const date = getStartOfWeek(new Date(), firstDayOfWeek)
+  const date = startOfWeek(new Date(), { weekStartsOn: firstDayOfWeek })
 
   for (let i = 0; i < 7; i += 1) {
     names.push(dayjs(date).locale(locale).format(format))
@@ -143,4 +116,23 @@ export const getWeekdaysNames = (
   }
 
   return names
+}
+
+export const getTodayOffset = (firstDayOfWeek: FirstDayOfWeek) => {
+  const today = new Date()
+  const monthStart = startOfMonth(today)
+  const firstDateInCalendar = startOfWeek(monthStart, {
+    weekStartsOn: firstDayOfWeek,
+  })
+  const weekOffset = differenceInWeeks(today, firstDateInCalendar)
+  const startOfWeekOffset = startOfWeek(today, {
+    weekStartsOn: firstDayOfWeek,
+  })
+  const dayOffset = differenceInDays(today, startOfWeekOffset)
+
+  return {
+    startOfMonth: monthStart,
+    weekOffset,
+    dayOffset,
+  }
 }
