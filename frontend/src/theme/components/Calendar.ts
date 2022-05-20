@@ -19,8 +19,7 @@ const parts = anatomy('calendar').parts(
 
 const baseDayOfMonthStyles: SystemStyleFunction = ({
   isToday,
-  isOutsideCurrMonth,
-  isSelected,
+  outside,
   colorScheme: c,
   theme,
 }) => {
@@ -35,15 +34,11 @@ const baseDayOfMonthStyles: SystemStyleFunction = ({
     display: 'inline-block',
     textStyle: 'body-1',
     borderRadius: '1.5rem',
-    color: isSelected
-      ? 'white'
-      : isOutsideCurrMonth
-      ? 'secondary.300'
-      : 'secondary.500',
+    color: outside ? 'secondary.300' : 'secondary.500',
     outline: 'none',
     border: '1px solid',
     borderColor: isToday
-      ? isOutsideCurrMonth
+      ? outside
         ? 'secondary.300'
         : `${c}.500`
       : 'transparent',

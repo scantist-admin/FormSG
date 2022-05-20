@@ -1,5 +1,6 @@
-import { Box, chakra, forwardRef, useStyles } from '@chakra-ui/react'
-import { format } from 'date-fns'
+import { useMemo } from 'react'
+import { Box, chakra, forwardRef, useMultiStyleConfig } from '@chakra-ui/react'
+import { format, isSameDay } from 'date-fns'
 
 import { getDayTabIndex } from './utils'
 
@@ -43,7 +44,11 @@ export const Day = forwardRef<DayProps, 'button'>(
     },
     ref,
   ) => {
-    const styles = useStyles()
+    const isToday = useMemo(() => isSameDay(value, new Date()), [value])
+    const styles = useMultiStyleConfig('Calendar', {
+      outside,
+      isToday,
+    })
 
     return (
       <Box px="2px" _focusWithin={{ zIndex: 1 }}>
@@ -51,7 +56,7 @@ export const Day = forwardRef<DayProps, 'button'>(
           // Prevent form submission if this component is nested in a form.
           type="button"
           disabled={isDisabled}
-          sx={styles.dayOfMonth}
+          __css={styles.dayOfMonth}
           aria-selected={selected}
           onMouseEnter={(event) => onMouseEnter?.(value, event)}
           aria-label={format(value, "do 'of' MMMM',' EEEE")}
