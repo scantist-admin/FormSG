@@ -16,6 +16,7 @@ export type ThemeButtonVariant =
   | 'clear'
   | 'link'
   | 'inputAttached'
+  | 'unstyled'
 
 const genVariantSolidColours = (c: string) => {
   const defaultBackgrounds = {
