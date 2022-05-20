@@ -93,6 +93,8 @@ export const Calendar = ({
   onChange,
   nextMonthLabel,
   previousMonthLabel,
+  nextYearLabel,
+  previousYearLabel,
   labelFormat,
   weekdayLabelFormat,
   renderDay,
@@ -217,41 +219,28 @@ export const Calendar = ({
         )}
         {selectionState === 'month' && (
           <MonthPicker
-            amountOfMonths={amountOfMonths}
-            month={_month}
+            monthDate={_month}
+            onYearChange={(year) => {
+              setMonth(new Date(year, _month.getMonth(), 1))
+            }}
+            onMonthLevel={() => setSelectionState('date')}
+            onYearLevel={() => setSelectionState('year')}
+            locale="en"
             minDate={minDate}
             maxDate={maxDate}
-            allowLevelChange={allowLevelChange}
-            daysRefs={daysRefs}
-            onMonthChange={setMonth}
-            onMonthLevel={() => setSelectionState('month')}
-            onYearLevel={() => setSelectionState('year')}
-            onDayKeyDown={handleDayKeyDown}
-            disableOutsideEvents={disableOutsideEvents}
-            excludeDate={excludeDate}
-            hideWeekdays={hideWeekdays}
-            fullWidth={fullWidth}
+            onChange={(monthValue) => {
+              setMonth(new Date(_month.getFullYear(), monthValue, 1))
+              setSelectionState('date')
+            }}
+            nextYearLabel={nextYearLabel}
+            previousYearLabel={previousYearLabel}
             preventFocus={preventFocus}
-            firstDayOfWeek={firstDayOfWeek}
-            value={value}
-            range={range}
-            onChange={onChange}
-            nextMonthLabel={nextMonthLabel}
-            previousMonthLabel={previousMonthLabel}
-            labelFormat={labelFormat}
-            weekdayLabelFormat={weekdayLabelFormat}
-            onDayMouseEnter={onDayMouseEnter}
-            renderDay={renderDay}
-            hideOutsideDates={hideOutsideDates}
-            isDateInRange={isDateInRange}
-            isDateFirstInRange={isDateFirstInRange}
-            isDateLastInRange={isDateLastInRange}
           />
         )}
         {selectionState === 'date' && (
           <DateView
             amountOfMonths={amountOfMonths}
-            month={_month}
+            monthDate={_month}
             minDate={minDate}
             maxDate={maxDate}
             allowLevelChange={allowLevelChange}

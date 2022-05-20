@@ -1,50 +1,75 @@
-import { Box } from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { SimpleGrid } from '@chakra-ui/react'
+
+import Button from '~components/Button'
 
 import { CalendarHeader } from './CalendarHeader'
-import { DayKeydownPayload, MonthSettings } from './types'
+import { getMonthsNames, isMonthInRange } from './utils'
 
-interface MonthPickerProps extends MonthSettings {
-  amountOfMonths: number
-  month: Date
-  allowLevelChange: boolean
-  daysRefs: React.RefObject<HTMLButtonElement[][][]>
-  onMonthChange(month: Date): void
-  onMonthLevel(): void
+export interface MonthPickerProps {
+  monthDate: Date
+  onChange(value: number): void
+  locale: string
+  onYearChange(year: number): void
   onYearLevel(): void
-  onDayKeyDown(
-    monthIndex: number,
-    payload: DayKeydownPayload,
-    event: React.KeyboardEvent<HTMLButtonElement>,
-  ): void
-  nextMonthLabel?: string
-  previousMonthLabel?: string
-  labelFormat?: string
-  weekdayLabelFormat?: string
-  renderDay?(date: Date): React.ReactNode
-  /** Selected date or an array of selected dates */
-  value?: Date | Date[]
-  /** Selected range */
-  range?: [Date, Date]
-  /** Called when day is selected */
-  onChange?(value: Date): void
-  /** Called when onMouseEnter event fired on day button */
-  onDayMouseEnter?(date: Date, event: React.MouseEvent): void
+  onMonthLevel(): void
+  minDate?: Date
+  maxDate?: Date
+  nextYearLabel?: string
+  previousYearLabel?: string
+  preventFocus?: boolean
 }
 
 export const MonthPicker = ({
-  onMonthLevel,
+  monthDate,
+  minDate,
+  maxDate,
   onYearLevel,
+  onMonthLevel,
+  locale,
+  onChange,
+  onYearChange,
 }: MonthPickerProps): JSX.Element => {
+  const year = useMemo(() => monthDate.getFullYear(), [monthDate])
+  const monthNames = useMemo(() => getMonthsNames(locale), [locale])
+  const activeMonth = useMemo(() => monthDate.getMonth(), [monthDate])
+
+  const hasNextYear = useMemo(
+    () => (minDate ? year < minDate.getFullYear() : true),
+    [minDate, year],
+  )
+  const hasPreviousYear = useMemo(
+    () => (maxDate ? year > maxDate.getFullYear() : true),
+    [maxDate, year],
+  )
+
   return (
     <>
       <CalendarHeader
+        onMonthLevel={onMonthLevel}
         onYearLevel={onYearLevel}
-        monthDate={new Date()}
+        monthDate={monthDate}
         locale="en"
-        hasNext
-        hasPrevious
+        hasNext={hasNextYear}
+        hasPrevious={hasPreviousYear}
+        onNext={() => onYearChange(year + 1)}
+        onPrevious={() => onYearChange(year - 1)}
       />
-      <Box>Month view</Box>
+      <SimpleGrid columns={3}>
+        {monthNames.map((monthName, index) => (
+          <Button
+            variant={activeMonth === index ? 'solid' : 'clear'}
+            colorScheme={activeMonth === index ? 'primary' : 'secondary'}
+            key={monthName}
+            onClick={() => onChange(index)}
+            isDisabled={
+              !isMonthInRange({ date: new Date(year, index), minDate, maxDate })
+            }
+          >
+            {monthName}
+          </Button>
+        ))}
+      </SimpleGrid>
     </>
   )
 }

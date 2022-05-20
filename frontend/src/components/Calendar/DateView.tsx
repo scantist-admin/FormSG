@@ -5,7 +5,7 @@ import { DayKeydownPayload, MonthSettings } from './types'
 
 interface DateViewProps extends MonthSettings {
   amountOfMonths: number
-  month: Date
+  monthDate: Date
   allowLevelChange: boolean
   daysRefs: React.RefObject<HTMLButtonElement[][][]>
   onMonthChange(month: Date): void
@@ -32,6 +32,7 @@ interface DateViewProps extends MonthSettings {
 }
 
 export const DateView = ({
+  monthDate,
   onMonthLevel,
   onYearLevel,
 }: DateViewProps): JSX.Element => {
@@ -40,7 +41,7 @@ export const DateView = ({
       <CalendarHeader
         onMonthLevel={onMonthLevel}
         onYearLevel={onYearLevel}
-        monthDate={new Date()}
+        monthDate={monthDate}
         locale="en"
         hasNext
         hasPrevious
