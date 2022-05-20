@@ -1,5 +1,7 @@
 import dayjs from 'dayjs'
 
+import { FirstDayOfWeek } from './types'
+
 interface FormatDateLabelArgs {
   date: Date
   locale: string
@@ -66,4 +68,79 @@ export const getDecadeRange = (year: number) => {
   }
 
   return range
+}
+
+const getEndOfWeek = (
+  date: Date,
+  firstDayOfWeek: FirstDayOfWeek = 'monday',
+) => {
+  const value = new Date(date)
+  const day = value.getDay()
+  const isSunday = firstDayOfWeek === 'sunday'
+
+  const clampToLastDay = 7 - (isSunday ? day + 1 : day)
+
+  if ((isSunday && day !== 6) || day !== 0) {
+    value.setDate(value.getDate() + clampToLastDay)
+  }
+
+  return value
+}
+
+const getStartOfWeek = (
+  date: Date,
+  firstDayOfWeek: FirstDayOfWeek = 'monday',
+) => {
+  const value = new Date(date)
+  const day = value.getDay() || 7
+  const isSunday = firstDayOfWeek === 'sunday'
+
+  const clampToFirstDay = isSunday ? day : day - 1
+
+  if ((isSunday && day !== 0) || day !== 1) {
+    value.setHours(-24 * clampToFirstDay)
+  }
+
+  return value
+}
+
+export const getMonthDays = (
+  month: Date,
+  firstDayOfWeek: FirstDayOfWeek = 'monday',
+): Date[][] => {
+  const currentMonth = month.getMonth()
+  const startOfMonth = new Date(month.getFullYear(), currentMonth, 1)
+  const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0)
+  const endDate = getEndOfWeek(endOfMonth, firstDayOfWeek)
+  const date = getStartOfWeek(startOfMonth, firstDayOfWeek)
+  const weeks: Date[][] = []
+
+  while (date <= endDate) {
+    const days: Date[] = []
+
+    for (let i = 0; i < 7; i += 1) {
+      days.push(new Date(date))
+      date.setDate(date.getDate() + 1)
+    }
+
+    weeks.push(days)
+  }
+
+  return weeks
+}
+
+export const getWeekdaysNames = (
+  locale: string,
+  firstDayOfWeek: FirstDayOfWeek = 'monday',
+  format = 'dd',
+) => {
+  const names: string[] = []
+  const date = getStartOfWeek(new Date(), firstDayOfWeek)
+
+  for (let i = 0; i < 7; i += 1) {
+    names.push(dayjs(date).locale(locale).format(format))
+    date.setDate(date.getDate() + 1)
+  }
+
+  return names
 }

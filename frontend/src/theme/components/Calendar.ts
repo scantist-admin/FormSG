@@ -25,6 +25,13 @@ const baseDayOfMonthStyles: SystemStyleFunction = ({
   theme,
 }) => {
   return {
+    _selected: {
+      color: 'white',
+      bg: `${c}.500`,
+      _hover: {
+        bg: `${c}.500`,
+      },
+    },
     display: 'inline-block',
     textStyle: 'body-1',
     borderRadius: '1.5rem',
@@ -41,7 +48,7 @@ const baseDayOfMonthStyles: SystemStyleFunction = ({
         : `${c}.500`
       : 'transparent',
     _hover: {
-      bg: isSelected ? `${c}.500` : `${c}.200`,
+      bg: `${c}.200`,
     },
     _focus: {
       boxShadow: `0 0 0 4px ${getColor(theme, `${c}.300`)}`,
@@ -111,6 +118,7 @@ export const Calendar: ComponentMultiStyleConfig<typeof parts> = {
       container: {
         borderBottom: '1px solid',
         borderColor: 'neutral.300',
+        flexDirection: 'column',
       },
       grid: {
         display: 'inline-grid',

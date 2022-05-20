@@ -7,6 +7,7 @@ import { CalendarHeader } from './CalendarHeader'
 import { getDecadeRange } from './utils'
 
 interface YearPickerProps {
+  locale: string
   monthDate: Date
   onChange(value: number): void
   minYear?: number
@@ -19,6 +20,7 @@ interface YearPickerProps {
 }
 
 export const YearPicker = ({
+  locale,
   monthDate,
   minYear,
   maxYear,
@@ -39,7 +41,7 @@ export const YearPicker = ({
         onYearLevel={onYearLevel}
         onMonthLevel={onMonthLevel}
         monthDate={monthDate}
-        locale="en"
+        locale={locale}
       />
       <SimpleGrid columns={4}>
         {range.map((year) => (

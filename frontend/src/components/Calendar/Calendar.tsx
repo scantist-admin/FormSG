@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
 import {
-  Box,
+  Flex,
   StylesProvider,
   useControllableState,
   useMultiStyleConfig,
 } from '@chakra-ui/react'
 
-import { DateView } from './DateView'
 import { MonthPicker } from './MonthPicker'
+import { MonthView } from './MonthView'
 import { DayKeydownPayload, MonthSettings } from './types'
 import { YearPicker } from './YearPicker'
 
@@ -29,6 +29,9 @@ export interface CalendarProps extends MonthSettings {
 
   /** Selected value */
   value?: Date | Date[]
+
+  /** Initial value for uncontrolled calendar */
+  defaultValue?: Date | Date[]
 
   /** Allow to change level (date – month – year) */
   allowLevelChange?: boolean
@@ -75,13 +78,16 @@ export interface CalendarProps extends MonthSettings {
 
 export const Calendar = ({
   amountOfMonths = 1,
+  locale = 'en',
   month,
   minDate,
   maxDate,
   initialMonth,
   onMonthChange,
   initialLevel = 'date',
-  value,
+  defaultValue,
+  value: valueProp,
+  onChange: onChangeProp,
   allowLevelChange = true,
   disableOutsideEvents,
   excludeDate,
@@ -90,7 +96,6 @@ export const Calendar = ({
   preventFocus,
   firstDayOfWeek,
   range,
-  onChange,
   nextMonthLabel,
   previousMonthLabel,
   nextYearLabel,
@@ -114,6 +119,12 @@ export const Calendar = ({
       .map(() => []),
   )
 
+  const [value, onChange] = useControllableState({
+    value: valueProp,
+    defaultValue,
+    onChange: onChangeProp,
+  })
+
   const [_month, setMonth] = useControllableState({
     value: month,
     defaultValue: initialMonth ?? new Date(),
@@ -131,9 +142,9 @@ export const Calendar = ({
       case 'ArrowDown': {
         event.preventDefault()
 
-        if (payload.rowIndex + 1 < daysRefs.current[monthIndex].length) {
-          daysRefs.current[monthIndex][payload.rowIndex + 1][
-            payload.cellIndex
+        if (payload.weekIndex + 1 < daysRefs.current[monthIndex].length) {
+          daysRefs.current[monthIndex][payload.weekIndex + 1][
+            payload.dayIndex
           ].focus()
         }
         break
@@ -142,9 +153,9 @@ export const Calendar = ({
       case 'ArrowUp': {
         event.preventDefault()
 
-        if (payload.rowIndex > 0) {
-          daysRefs.current[monthIndex][payload.rowIndex - 1][
-            payload.cellIndex
+        if (payload.weekIndex > 0) {
+          daysRefs.current[monthIndex][payload.weekIndex - 1][
+            payload.dayIndex
           ].focus()
         }
         break
@@ -153,13 +164,13 @@ export const Calendar = ({
       case 'ArrowRight': {
         event.preventDefault()
 
-        if (payload.cellIndex !== 6) {
-          daysRefs.current[monthIndex][payload.rowIndex][
-            payload.cellIndex + 1
+        if (payload.dayIndex !== 6) {
+          daysRefs.current[monthIndex][payload.weekIndex][
+            payload.dayIndex + 1
           ].focus()
         } else if (monthIndex + 1 < amountOfMonths) {
-          if (daysRefs.current[monthIndex + 1][payload.rowIndex]) {
-            daysRefs.current[monthIndex + 1][payload.rowIndex][0]?.focus()
+          if (daysRefs.current[monthIndex + 1][payload.weekIndex]) {
+            daysRefs.current[monthIndex + 1][payload.weekIndex][0]?.focus()
           }
         }
 
@@ -169,13 +180,13 @@ export const Calendar = ({
       case 'ArrowLeft': {
         event.preventDefault()
 
-        if (payload.cellIndex !== 0) {
-          daysRefs.current[monthIndex][payload.rowIndex][
-            payload.cellIndex - 1
+        if (payload.dayIndex !== 0) {
+          daysRefs.current[monthIndex][payload.weekIndex][
+            payload.dayIndex - 1
           ].focus()
         } else if (monthIndex > 0) {
-          if (daysRefs.current[monthIndex - 1][payload.rowIndex]) {
-            daysRefs.current[monthIndex - 1][payload.rowIndex][6].focus()
+          if (daysRefs.current[monthIndex - 1][payload.weekIndex]) {
+            daysRefs.current[monthIndex - 1][payload.weekIndex][6].focus()
           }
         }
       }
@@ -184,9 +195,10 @@ export const Calendar = ({
 
   return (
     <StylesProvider value={styles}>
-      <Box sx={styles.container}>
+      <Flex sx={styles.container}>
         {selectionState === 'year' && (
           <YearPicker
+            locale={locale}
             monthDate={_month}
             minYear={minYear}
             maxYear={maxYear}
@@ -209,7 +221,7 @@ export const Calendar = ({
             }}
             onMonthLevel={() => setSelectionState('date')}
             onYearLevel={() => setSelectionState('year')}
-            locale="en"
+            locale={locale}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(monthValue) => {
@@ -222,11 +234,12 @@ export const Calendar = ({
           />
         )}
         {selectionState === 'date' && (
-          <DateView
+          <MonthView
             amountOfMonths={amountOfMonths}
             monthDate={_month}
             minDate={minDate}
             maxDate={maxDate}
+            locale={locale}
             allowLevelChange={allowLevelChange}
             daysRefs={daysRefs}
             onMonthChange={setMonth}
@@ -254,7 +267,7 @@ export const Calendar = ({
             isDateLastInRange={isDateLastInRange}
           />
         )}
-      </Box>
+      </Flex>
     </StylesProvider>
   )
 }

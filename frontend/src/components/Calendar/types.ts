@@ -1,8 +1,8 @@
 export type FirstDayOfWeek = 'sunday' | 'monday'
 
 export interface DayKeydownPayload {
-  rowIndex: number
-  cellIndex: number
+  weekIndex: number
+  dayIndex: number
   date: Date
 }
 
