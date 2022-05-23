@@ -80,7 +80,7 @@ const sizes: Record<
     },
     container: {
       maxW: {
-        base: `${15.75 * amountOfMonths}rem`,
+        base: `${18 * amountOfMonths}rem`,
         md: `${22.75 * amountOfMonths}rem`,
       },
     },
