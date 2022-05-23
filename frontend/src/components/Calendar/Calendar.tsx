@@ -8,11 +8,11 @@ import {
 import { differenceInCalendarMonths } from 'date-fns'
 import { get } from 'lodash'
 
-import { MonthPicker } from './MonthPicker'
-import { MonthView } from './MonthView'
+import { MonthPicker } from './components/MonthPicker'
+import { MonthView } from './components/MonthView'
+import { YearPicker } from './components/YearPicker'
 import { DayKeydownPayload, MonthSettings } from './types'
 import { getCalendarOffset, getOffsetFromKeydown } from './utils'
-import { YearPicker } from './YearPicker'
 
 export interface CalendarProps extends MonthSettings {
   /** Month for controlled calendar */

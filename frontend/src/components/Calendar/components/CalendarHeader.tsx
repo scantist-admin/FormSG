@@ -7,7 +7,7 @@ import { useIsMobile } from '~hooks/useIsMobile'
 import Button from '~components/Button'
 import IconButton from '~components/IconButton'
 
-import { formatMonthLabel, formatYearLabel } from './utils'
+import { formatMonthLabel, formatYearLabel } from '../utils'
 
 export interface CalendarHeaderProps {
   hasPrevious: boolean

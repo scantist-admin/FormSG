@@ -3,8 +3,9 @@ import { SimpleGrid } from '@chakra-ui/react'
 
 import Button from '~components/Button'
 
+import { getDecadeRange } from '../utils'
+
 import { CalendarHeader } from './CalendarHeader'
-import { getDecadeRange } from './utils'
 
 interface YearPickerProps {
   locale: string

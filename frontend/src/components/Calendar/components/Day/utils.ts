@@ -1,7 +1,7 @@
 import { isSameDay, isSameMonth, isWeekend } from 'date-fns'
 import dayjs from 'dayjs'
 
-import { DayModifiers } from '../types'
+import { DayModifiers } from '../../types'
 
 const isOutside = (date: Date, month: Date) => {
   return !isSameMonth(date, month)

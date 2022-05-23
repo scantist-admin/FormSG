@@ -2,10 +2,11 @@ import { chakra, useStyles } from '@chakra-ui/react'
 import { isSameDay } from 'date-fns'
 import dayjs from 'dayjs'
 
+import { DayKeydownPayload, MonthSettings } from '../types'
+import { getMonthDays, getWeekdaysNames } from '../utils'
+
 import { getDayProps } from './Day/utils'
 import { Day } from './Day'
-import { DayKeydownPayload, MonthSettings } from './types'
-import { getMonthDays, getWeekdaysNames } from './utils'
 
 export interface MonthProps extends MonthSettings {
   /** Date at which month should be shown */

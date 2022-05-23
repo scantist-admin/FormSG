@@ -3,8 +3,9 @@ import { SimpleGrid } from '@chakra-ui/react'
 
 import Button from '~components/Button'
 
+import { getMonthsNames, isMonthInRange } from '../utils'
+
 import { CalendarHeader } from './CalendarHeader'
-import { getMonthsNames, isMonthInRange } from './utils'
 
 export interface MonthPickerProps {
   monthDate: Date
