@@ -9,7 +9,7 @@ import {
 import { MonthPicker } from './MonthPicker'
 import { MonthView } from './MonthView'
 import { DayKeydownPayload, MonthSettings } from './types'
-import { getTodayOffset } from './utils'
+import { getCalendarOffset, getOffsetFromKeydown } from './utils'
 import { YearPicker } from './YearPicker'
 
 export interface CalendarProps extends MonthSettings {
@@ -139,8 +139,10 @@ export const Calendar = ({
   const maxYear = maxDate instanceof Date ? maxDate.getFullYear() : 10000
 
   const handleTodayButtonClick = () => {
-    const { startOfMonth, weekOffset, dayOffset } =
-      getTodayOffset(firstDayOfWeek)
+    const { startOfMonth, weekOffset, dayOffset } = getCalendarOffset(
+      new Date(),
+      firstDayOfWeek,
+    )
     setMonth(startOfMonth)
 
     const todayRef = daysRefs.current[0][weekOffset][dayOffset]
@@ -157,59 +159,14 @@ export const Calendar = ({
     payload: DayKeydownPayload,
     event: React.KeyboardEvent<HTMLButtonElement>,
   ) => {
-    switch (event.code) {
-      case 'ArrowDown': {
-        event.preventDefault()
+    const offset = getOffsetFromKeydown(event.key, payload.date, firstDayOfWeek)
+    if (!offset) return
 
-        if (payload.weekIndex + 1 < daysRefs.current[monthIndex].length) {
-          daysRefs.current[monthIndex][payload.weekIndex + 1][
-            payload.dayIndex
-          ].focus()
-        }
-        break
-      }
-
-      case 'ArrowUp': {
-        event.preventDefault()
-
-        if (payload.weekIndex > 0) {
-          daysRefs.current[monthIndex][payload.weekIndex - 1][
-            payload.dayIndex
-          ].focus()
-        }
-        break
-      }
-
-      case 'ArrowRight': {
-        event.preventDefault()
-
-        if (payload.dayIndex !== 6) {
-          daysRefs.current[monthIndex][payload.weekIndex][
-            payload.dayIndex + 1
-          ].focus()
-        } else if (monthIndex + 1 < amountOfMonths) {
-          if (daysRefs.current[monthIndex + 1][payload.weekIndex]) {
-            daysRefs.current[monthIndex + 1][payload.weekIndex][0]?.focus()
-          }
-        }
-
-        break
-      }
-
-      case 'ArrowLeft': {
-        event.preventDefault()
-
-        if (payload.dayIndex !== 0) {
-          daysRefs.current[monthIndex][payload.weekIndex][
-            payload.dayIndex - 1
-          ].focus()
-        } else if (monthIndex > 0) {
-          if (daysRefs.current[monthIndex - 1][payload.weekIndex]) {
-            daysRefs.current[monthIndex - 1][payload.weekIndex][6].focus()
-          }
-        }
-      }
-    }
+    event.preventDefault()
+    setMonth(offset.startOfMonth)
+    const nextFocusRef =
+      daysRefs.current[monthIndex][offset.weekOffset][offset.dayOffset]
+    nextFocusRef?.focus()
   }
 
   return (

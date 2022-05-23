@@ -1,10 +1,15 @@
 import {
+  addDays,
+  addWeeks,
   differenceInDays,
   differenceInWeeks,
   endOfMonth,
   endOfWeek,
+  startOfDay,
   startOfMonth,
   startOfWeek,
+  subDays,
+  subWeeks,
 } from 'date-fns'
 import dayjs from 'dayjs'
 
@@ -123,21 +128,55 @@ export const getWeekdaysNames = (
   return names
 }
 
-export const getTodayOffset = (firstDayOfWeek: FirstDayOfWeek) => {
-  const today = new Date()
-  const monthStart = startOfMonth(today)
+export const getCalendarOffset = (
+  date: Date,
+  firstDayOfWeek: FirstDayOfWeek,
+) => {
+  const monthStart = startOfMonth(date)
   const firstDateInCalendar = startOfWeek(monthStart, {
     weekStartsOn: firstDayOfWeek,
   })
-  const weekOffset = differenceInWeeks(today, firstDateInCalendar)
-  const startOfWeekOffset = startOfWeek(today, {
+  const weekOffset = differenceInWeeks(date, firstDateInCalendar)
+  const startOfWeekOffset = startOfWeek(date, {
     weekStartsOn: firstDayOfWeek,
   })
-  const dayOffset = differenceInDays(today, startOfWeekOffset)
+  const dayOffset = differenceInDays(date, startOfWeekOffset)
 
   return {
     startOfMonth: monthStart,
     weekOffset,
     dayOffset,
   }
+}
+
+/**
+ * Calculates what date should be newly focused based on the previously
+ * focused date and which key a user has pressed.
+ * @param date Date which was originally focused
+ * @param key Key pressed
+ * @returns New date which should be focused, null if key is invalid.
+ */
+const getNewDateFromKeyPress = (date: Date, key: string): Date | null => {
+  switch (key) {
+    case 'ArrowUp':
+      return startOfDay(subWeeks(date, 1))
+    case 'ArrowDown':
+      return startOfDay(addWeeks(date, 1))
+    case 'ArrowLeft':
+      return startOfDay(subDays(date, 1))
+    case 'ArrowRight':
+      return startOfDay(addDays(date, 1))
+    default:
+      return null
+  }
+}
+
+export const getOffsetFromKeydown = (
+  key: string,
+  date: Date,
+  firstDayOfWeek: FirstDayOfWeek,
+) => {
+  const newDate = getNewDateFromKeyPress(date, key)
+  if (!newDate) return null
+  return getCalendarOffset(newDate, firstDayOfWeek)
 }
