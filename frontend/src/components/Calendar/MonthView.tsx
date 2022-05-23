@@ -97,7 +97,7 @@ export const MonthView = ({
           />
 
           <Month
-            monthDate={monthDate}
+            monthDate={calMonthDate}
             daysRefs={daysRefs.current?.[index]}
             onDayKeyDown={(...args) => onDayKeyDown(index, ...args)}
             minDate={minDate}
