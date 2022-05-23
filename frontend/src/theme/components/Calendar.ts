@@ -75,9 +75,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
       },
     },
     container: {
-      pb: '1rem',
-      px: '0.625rem',
-      mb: '-1px',
+      maxW: { base: '15.75rem', md: '22.75rem' },
     },
     dayNamesContainer: {
       w: {
@@ -90,6 +88,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
       },
     },
     todayButtonContainer: {
+      mt: '1rem',
       py: '0.375rem',
     },
   },
@@ -112,8 +111,6 @@ export const Calendar: ComponentMultiStyleConfig<typeof parts> = {
         justifyContent: 'flex-end',
       },
       container: {
-        borderBottom: '1px solid',
-        borderColor: 'neutral.300',
         flexDirection: 'column',
       },
       grid: {
@@ -129,6 +126,8 @@ export const Calendar: ComponentMultiStyleConfig<typeof parts> = {
       },
       dayOfMonth: baseDayOfMonthStyles(props),
       todayButtonContainer: {
+        borderTop: '1px solid',
+        borderColor: 'neutral.300',
         textAlign: 'center',
       },
       todayButton: {

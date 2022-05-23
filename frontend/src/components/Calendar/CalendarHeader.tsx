@@ -3,6 +3,7 @@ import { Flex, Stack, useStyles } from '@chakra-ui/react'
 
 import { BxChevronLeft, BxChevronRight } from '~assets/icons'
 import { BxExpandVertical } from '~assets/icons/BxExpandVertical'
+import { useIsMobile } from '~hooks/useIsMobile'
 import Button from '~components/Button'
 import IconButton from '~components/IconButton'
 
@@ -15,8 +16,8 @@ export interface CalendarHeaderProps {
   onPrevious?(): void
   onMonthLevel?(): void
   onYearLevel?(): void
-  nextLevelDisabled?: boolean
-  selectLevelLabel?: string
+  selectMonthLabel?: string
+  selectYearLabel?: string
   nextLabel?: string
   previousLabel?: string
   preventLevelFocus?: boolean
@@ -36,19 +37,22 @@ export const CalendarHeader = ({
   locale,
   onMonthLevel,
   onYearLevel,
-  nextLevelDisabled,
+  selectMonthLabel = 'Select a month',
+  selectYearLabel = 'Select a year',
 }: CalendarHeaderProps): JSX.Element => {
   const styles = useStyles()
+  const isMobile = useIsMobile()
   const headerLabels = useMemo(
     () => ({
-      month: formatMonthLabel({ date: monthDate, locale }),
+      month: formatMonthLabel({
+        date: monthDate,
+        locale,
+        abbreviate: isMobile,
+      }),
       year: formatYearLabel({ date: monthDate, locale }),
     }),
-    [locale, monthDate],
+    [isMobile, locale, monthDate],
   )
-  // const {
-  //   renderProps: { calendars, getBackProps, getForwardProps },
-  // } = useCalendar()
 
   return (
     <Flex sx={styles.monthYearSelectorContainer}>
@@ -59,6 +63,7 @@ export const CalendarHeader = ({
           px="0.5rem"
           variant="clear"
           colorScheme="secondary"
+          aria-label={selectMonthLabel}
           rightIcon={<BxExpandVertical />}
         >
           {headerLabels.month}
@@ -69,6 +74,7 @@ export const CalendarHeader = ({
           px="0.5rem"
           variant="clear"
           colorScheme="secondary"
+          aria-label={selectYearLabel}
           rightIcon={<BxExpandVertical />}
         >
           {headerLabels.year}

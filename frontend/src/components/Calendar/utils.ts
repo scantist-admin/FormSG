@@ -10,10 +10,16 @@ import dayjs from 'dayjs'
 
 import { FirstDayOfWeek } from './types'
 
-interface FormatDateLabelArgs {
+interface FormatLabelBaseArgs {
   date: Date
   locale: string
+}
+interface FormatDateLabelArgs extends FormatLabelBaseArgs {
   format: string
+}
+
+interface FormatMonthLabelArgs extends FormatLabelBaseArgs {
+  abbreviate?: boolean
 }
 
 const formatDateLabel = ({ date, locale, format }: FormatDateLabelArgs) => {
@@ -23,14 +29,13 @@ const formatDateLabel = ({ date, locale, format }: FormatDateLabelArgs) => {
 export const formatMonthLabel = ({
   date,
   locale,
-}: Omit<FormatDateLabelArgs, 'format'>) => {
-  return formatDateLabel({ date, locale, format: 'MMMM' })
+  abbreviate,
+}: FormatMonthLabelArgs) => {
+  const format = abbreviate ? 'MMM' : 'MMMM'
+  return formatDateLabel({ date, locale, format })
 }
 
-export const formatYearLabel = ({
-  date,
-  locale,
-}: Omit<FormatDateLabelArgs, 'format'>) => {
+export const formatYearLabel = ({ date, locale }: FormatLabelBaseArgs) => {
   return formatDateLabel({ date, locale, format: 'YYYY' })
 }
 
