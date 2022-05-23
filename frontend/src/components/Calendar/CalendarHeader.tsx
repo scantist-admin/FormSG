@@ -81,26 +81,26 @@ export const CalendarHeader = ({
         </Button>
       </Stack>
       <Flex sx={styles.monthArrowContainer}>
-        <IconButton
-          isDisabled={!hasPrevious}
-          onClick={onPrevious}
-          variant="clear"
-          colorScheme="secondary"
-          icon={<BxChevronLeft />}
-          aria-label={previousLabel}
-          // minW={{ base: '1.75rem', xs: '2.75rem', sm: '2.75rem' }}
-          // {...getBackProps({ calendars })}
-        />
-        <IconButton
-          variant="clear"
-          colorScheme="secondary"
-          icon={<BxChevronRight />}
-          isDisabled={!hasNext}
-          onClick={onNext}
-          aria-label={nextLabel}
-          // minW={{ base: '1.75rem', xs: '2.75rem', sm: '2.75rem' }}
-          // {...getForwardProps({ calendars })}
-        />
+        {hasPrevious && (
+          <IconButton
+            isDisabled={!onPrevious}
+            onClick={onPrevious}
+            variant="clear"
+            colorScheme="secondary"
+            icon={<BxChevronLeft />}
+            aria-label={previousLabel}
+          />
+        )}
+        {hasNext && (
+          <IconButton
+            variant="clear"
+            colorScheme="secondary"
+            icon={<BxChevronRight />}
+            isDisabled={!onNext}
+            onClick={onNext}
+            aria-label={nextLabel}
+          />
+        )}
       </Flex>
     </Flex>
   )

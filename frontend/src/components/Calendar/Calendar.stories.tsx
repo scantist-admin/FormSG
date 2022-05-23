@@ -11,3 +11,8 @@ export default {
 const Template: Story<CalendarProps> = (args) => <Calendar {...args} />
 export const Default = Template.bind({})
 Default.args = {}
+
+export const MultiCalendar = Template.bind({})
+MultiCalendar.args = {
+  amountOfMonths: 2,
+}

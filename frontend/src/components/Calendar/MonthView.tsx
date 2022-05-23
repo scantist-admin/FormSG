@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Flex, Wrap } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 
 import { CalendarHeader } from './CalendarHeader'
@@ -75,7 +75,7 @@ export const MonthView = ({
               isMonthInRange({ date: nextMonth, minDate, maxDate })
             }
             hasPrevious={
-              index === 0 &&
+              index + 1 === amountOfMonths &&
               isMonthInRange({ date: previousMonth, minDate, maxDate })
             }
             onNext={() =>
@@ -109,13 +109,16 @@ export const MonthView = ({
             weekdayLabelFormat={weekdayLabelFormat}
             {...rest}
           />
-          <TodayButton
-            onClick={onTodayClick}
-            todayButtonLabel={todayButtonLabel}
-          />
         </Box>
       )
     })
 
-  return <>{months}</>
+  return (
+    <Flex flexDir="column">
+      <Wrap justify="center" shouldWrapChildren spacingX={0}>
+        {months}
+      </Wrap>
+      <TodayButton onClick={onTodayClick} todayButtonLabel={todayButtonLabel} />
+    </Flex>
+  )
 }

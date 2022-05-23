@@ -1,6 +1,7 @@
 import {
   anatomy,
   getColor,
+  PartsStyleFunction,
   PartsStyleObject,
   SystemStyleFunction,
 } from '@chakra-ui/theme-tools'
@@ -58,32 +59,38 @@ const baseDayOfMonthStyles: SystemStyleFunction = ({
   }
 }
 
-const sizes: Record<string, PartsStyleObject<typeof parts>> = {
-  md: {
+const sizes: Record<
+  string,
+  PartsStyleObject<typeof parts> | PartsStyleFunction<typeof parts>
+> = {
+  md: ({ amountOfMonths }) => ({
     dayOfMonth: {
       p: {
         base: 0,
         md: 0.75,
       },
       w: {
-        base: '2rem',
+        base: '2.25rem',
         md: '3rem',
       },
       h: {
-        base: '2rem',
+        base: '2.25rem',
         md: '3rem',
       },
     },
     container: {
-      maxW: { base: '15.75rem', md: '22.75rem' },
+      maxW: {
+        base: `${15.75 * amountOfMonths}rem`,
+        md: `${22.75 * amountOfMonths}rem`,
+      },
     },
     dayNamesContainer: {
       w: {
-        base: '2.25rem',
+        base: '2.5rem',
         md: '3.25rem',
       },
       h: {
-        base: '2rem',
+        base: '2.25rem',
         md: '3rem',
       },
     },
@@ -91,7 +98,7 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
       mt: '1rem',
       py: '0.375rem',
     },
-  },
+  }),
 }
 
 export const Calendar: ComponentMultiStyleConfig<typeof parts> = {

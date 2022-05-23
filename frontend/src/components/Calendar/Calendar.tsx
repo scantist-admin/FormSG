@@ -116,7 +116,7 @@ export const Calendar = ({
   isDateFirstInRange,
   isDateLastInRange,
 }: CalendarProps): JSX.Element => {
-  const styles = useMultiStyleConfig('Calendar', {})
+  const styles = useMultiStyleConfig('Calendar', { amountOfMonths })
   const [selectionState, setSelectionState] = useState(initialLevel)
   const daysRefs = useRef<HTMLButtonElement[][][]>(
     Array(amountOfMonths)
