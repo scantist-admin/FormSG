@@ -102,8 +102,6 @@ export const Month = ({
                   range,
                 })
 
-                const onKeyDownPayload = { weekIndex, dayIndex, date }
-
                 return (
                   <chakra.td key={dayIndex}>
                     <Day
@@ -144,9 +142,7 @@ export const Month = ({
                       }
                       selected={dayProps.selected || dayProps.selectedInRange}
                       hasValue={hasValueInMonthRange}
-                      onKeyDown={(event) =>
-                        onDayKeyDown?.(onKeyDownPayload, event)
-                      }
+                      onKeyDown={(event) => onDayKeyDown?.({ date }, event)}
                       isDisabled={dayProps.disabled}
                       onMouseEnter={onDayMouseEnter}
                       fullWidth={fullWidth}

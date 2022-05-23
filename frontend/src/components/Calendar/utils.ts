@@ -178,5 +178,5 @@ export const getOffsetFromKeydown = (
 ) => {
   const newDate = getNewDateFromKeyPress(date, key)
   if (!newDate) return null
-  return getCalendarOffset(newDate, firstDayOfWeek)
+  return { newDate, ...getCalendarOffset(newDate, firstDayOfWeek) }
 }

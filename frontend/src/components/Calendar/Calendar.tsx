@@ -5,6 +5,8 @@ import {
   useControllableState,
   useMultiStyleConfig,
 } from '@chakra-ui/react'
+import { differenceInCalendarMonths } from 'date-fns'
+import { get } from 'lodash'
 
 import { MonthPicker } from './MonthPicker'
 import { MonthView } from './MonthView'
@@ -155,17 +157,30 @@ export const Calendar = ({
   }
 
   const handleDayKeyDown = (
-    monthIndex: number,
-    payload: DayKeydownPayload,
+    { date }: DayKeydownPayload,
     event: React.KeyboardEvent<HTMLButtonElement>,
   ) => {
-    const offset = getOffsetFromKeydown(event.key, payload.date, firstDayOfWeek)
+    const offset = getOffsetFromKeydown(event.key, date, firstDayOfWeek)
     if (!offset) return
 
     event.preventDefault()
-    setMonth(offset.startOfMonth)
-    const nextFocusRef =
-      daysRefs.current[monthIndex][offset.weekOffset][offset.dayOffset]
+
+    let monthOffset = differenceInCalendarMonths(offset.newDate, _month)
+    if (monthOffset >= amountOfMonths || monthOffset < 0) {
+      setMonth(offset.startOfMonth)
+      // Month has been changed, so we need to update the offset
+      monthOffset = differenceInCalendarMonths(
+        offset.startOfMonth,
+        offset.newDate,
+      )
+    }
+
+    const nextFocusRef = get(daysRefs.current, [
+      monthOffset,
+      offset.weekOffset,
+      offset.dayOffset,
+    ])
+
     nextFocusRef?.focus()
   }
 

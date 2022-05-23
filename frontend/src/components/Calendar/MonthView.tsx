@@ -18,7 +18,6 @@ interface MonthViewProps extends MonthSettings {
   onMonthLevel(): void
   onYearLevel(): void
   onDayKeyDown(
-    monthIndex: number,
     payload: DayKeydownPayload,
     event: React.KeyboardEvent<HTMLButtonElement>,
   ): void
@@ -99,7 +98,7 @@ export const MonthView = ({
           <Month
             monthDate={calMonthDate}
             daysRefs={daysRefs.current?.[index]}
-            onDayKeyDown={(...args) => onDayKeyDown(index, ...args)}
+            onDayKeyDown={onDayKeyDown}
             minDate={minDate}
             maxDate={maxDate}
             locale={locale}
