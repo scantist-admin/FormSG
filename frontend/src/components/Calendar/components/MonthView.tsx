@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Box, Flex, Wrap } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 
@@ -58,60 +59,91 @@ export const MonthView = ({
   weekdayLabelFormat,
   ...rest
 }: MonthViewProps): JSX.Element => {
-  const nextMonth = dayjs(monthDate).add(amountOfMonths, 'months').toDate()
-  const previousMonth = dayjs(monthDate).subtract(1, 'months').toDate()
+  const nextMonth = useMemo(
+    () => dayjs(monthDate).add(amountOfMonths, 'months').toDate(),
+    [amountOfMonths, monthDate],
+  )
+  const previousMonth = useMemo(
+    () => dayjs(monthDate).subtract(1, 'months').toDate(),
+    [monthDate],
+  )
 
-  const months = Array(amountOfMonths)
-    .fill(0)
-    .map((_, index) => {
-      const calMonthDate = dayjs(monthDate).add(index, 'months').toDate()
-      return (
-        <Box key={index}>
-          <CalendarHeader
-            locale={locale}
-            monthDate={calMonthDate}
-            hasNext={
-              index + 1 === amountOfMonths &&
-              isMonthInRange({ date: nextMonth, minDate, maxDate })
-            }
-            hasPrevious={
-              index + 1 === amountOfMonths &&
-              isMonthInRange({ date: previousMonth, minDate, maxDate })
-            }
-            onNext={() =>
-              onMonthChange(
-                dayjs(monthDate).add(amountOfMonths, 'months').toDate(),
-              )
-            }
-            onPrevious={() =>
-              onMonthChange(
-                dayjs(monthDate).subtract(amountOfMonths, 'months').toDate(),
-              )
-            }
-            onMonthLevel={onMonthLevel}
-            onYearLevel={onYearLevel}
-            nextLabel={nextMonthLabel}
-            previousLabel={previousMonthLabel}
-            preventLevelFocus={index > 0}
-            preventFocus={preventFocus}
-          />
+  const months = useMemo(
+    () =>
+      Array(amountOfMonths)
+        .fill(0)
+        .map((_, index) => {
+          const calMonthDate = dayjs(monthDate).add(index, 'months').toDate()
+          return (
+            <Box key={index}>
+              <CalendarHeader
+                locale={locale}
+                monthDate={calMonthDate}
+                hasNext={
+                  index + 1 === amountOfMonths &&
+                  isMonthInRange({ date: nextMonth, minDate, maxDate })
+                }
+                hasPrevious={
+                  index + 1 === amountOfMonths &&
+                  isMonthInRange({ date: previousMonth, minDate, maxDate })
+                }
+                onNext={() =>
+                  onMonthChange(
+                    dayjs(monthDate).add(amountOfMonths, 'months').toDate(),
+                  )
+                }
+                onPrevious={() =>
+                  onMonthChange(
+                    dayjs(monthDate)
+                      .subtract(amountOfMonths, 'months')
+                      .toDate(),
+                  )
+                }
+                onMonthLevel={onMonthLevel}
+                onYearLevel={onYearLevel}
+                nextLabel={nextMonthLabel}
+                previousLabel={previousMonthLabel}
+                preventLevelFocus={index > 0}
+                preventFocus={preventFocus}
+              />
 
-          <Month
-            monthDate={calMonthDate}
-            daysRefs={daysRefs.current?.[index]}
-            onDayKeyDown={onDayKeyDown}
-            minDate={minDate}
-            maxDate={maxDate}
-            locale={locale}
-            focusable={index === 0}
-            preventFocus={preventFocus}
-            renderDay={renderDay}
-            weekdayLabelFormat={weekdayLabelFormat}
-            {...rest}
-          />
-        </Box>
-      )
-    })
+              <Month
+                monthDate={calMonthDate}
+                daysRefs={daysRefs.current?.[index]}
+                onDayKeyDown={onDayKeyDown}
+                minDate={minDate}
+                maxDate={maxDate}
+                locale={locale}
+                focusable={index === 0}
+                preventFocus={preventFocus}
+                renderDay={renderDay}
+                weekdayLabelFormat={weekdayLabelFormat}
+                {...rest}
+              />
+            </Box>
+          )
+        }),
+    [
+      amountOfMonths,
+      daysRefs,
+      locale,
+      maxDate,
+      minDate,
+      monthDate,
+      nextMonth,
+      nextMonthLabel,
+      onDayKeyDown,
+      onMonthChange,
+      onMonthLevel,
+      onYearLevel,
+      preventFocus,
+      previousMonth,
+      previousMonthLabel,
+      renderDay,
+      rest,
+      weekdayLabelFormat,
+    ],
+  )
 
   return (
     <Flex flexDir="column">

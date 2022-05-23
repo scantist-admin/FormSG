@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { chakra, useStyles } from '@chakra-ui/react'
 import { isSameDay } from 'date-fns'
 import dayjs from 'dayjs'
@@ -68,13 +69,22 @@ export const Month = ({
 }: MonthProps): JSX.Element => {
   const styles = useStyles()
 
-  const monthDays = getMonthDays(monthDate, firstDayOfWeek)
-  const dayLabels = getWeekdaysNames(locale, firstDayOfWeek, weekdayLabelFormat)
+  const monthDays = useMemo(
+    () => getMonthDays(monthDate, firstDayOfWeek),
+    [firstDayOfWeek, monthDate],
+  )
+  const dayLabels = useMemo(
+    () => getWeekdaysNames(locale, firstDayOfWeek, weekdayLabelFormat),
+    [firstDayOfWeek, locale, weekdayLabelFormat],
+  )
 
-  const hasValueInMonthRange =
-    value instanceof Date &&
-    dayjs(value).isAfter(dayjs(monthDate).startOf('month')) &&
-    dayjs(value).isBefore(dayjs(monthDate).endOf('month'))
+  const hasValueInMonthRange = useMemo(
+    () =>
+      value instanceof Date &&
+      dayjs(value).isAfter(dayjs(monthDate).startOf('month')) &&
+      dayjs(value).isBefore(dayjs(monthDate).endOf('month')),
+    [monthDate, value],
+  )
 
   return (
     <chakra.table sx={styles.grid}>

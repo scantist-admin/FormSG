@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import {
   Flex,
   StylesProvider,
@@ -137,10 +137,16 @@ export const Calendar = ({
     defaultValue: initialMonth ?? new Date(),
     onChange: onMonthChange,
   })
-  const minYear = minDate instanceof Date ? minDate.getFullYear() : 0
-  const maxYear = maxDate instanceof Date ? maxDate.getFullYear() : 10000
+  const minYear = useMemo(
+    () => (minDate instanceof Date ? minDate.getFullYear() : 0),
+    [minDate],
+  )
+  const maxYear = useMemo(
+    () => (maxDate instanceof Date ? maxDate.getFullYear() : 10000),
+    [maxDate],
+  )
 
-  const handleTodayButtonClick = () => {
+  const handleTodayButtonClick = useCallback(() => {
     const { startOfMonth, weekOffset, dayOffset } = getCalendarOffset(
       new Date(),
       firstDayOfWeek,
@@ -154,35 +160,38 @@ export const Calendar = ({
       todayRef.setAttribute('data-focus-visible-added', 'true')
       todayRef.focus()
     }
-  }
+  }, [firstDayOfWeek, setMonth])
 
-  const handleDayKeyDown = (
-    { date }: DayKeydownPayload,
-    event: React.KeyboardEvent<HTMLButtonElement>,
-  ) => {
-    const offset = getOffsetFromKeydown(event.key, date, firstDayOfWeek)
-    if (!offset) return
+  const handleDayKeyDown = useCallback(
+    (
+      { date }: DayKeydownPayload,
+      event: React.KeyboardEvent<HTMLButtonElement>,
+    ) => {
+      const offset = getOffsetFromKeydown(event.key, date, firstDayOfWeek)
+      if (!offset) return
 
-    event.preventDefault()
+      event.preventDefault()
 
-    let monthOffset = differenceInCalendarMonths(offset.newDate, _month)
-    if (monthOffset >= amountOfMonths || monthOffset < 0) {
-      setMonth(offset.startOfMonth)
-      // Month has been changed, so we need to update the offset
-      monthOffset = differenceInCalendarMonths(
-        offset.startOfMonth,
-        offset.newDate,
-      )
-    }
+      let monthOffset = differenceInCalendarMonths(offset.newDate, _month)
+      if (monthOffset >= amountOfMonths || monthOffset < 0) {
+        setMonth(offset.startOfMonth)
+        // Month has been changed, so we need to update the offset
+        monthOffset = differenceInCalendarMonths(
+          offset.startOfMonth,
+          offset.newDate,
+        )
+      }
 
-    const nextFocusRef = get(daysRefs.current, [
-      monthOffset,
-      offset.weekOffset,
-      offset.dayOffset,
-    ])
+      const nextFocusRef = get(daysRefs.current, [
+        monthOffset,
+        offset.weekOffset,
+        offset.dayOffset,
+      ])
 
-    nextFocusRef?.focus()
-  }
+      nextFocusRef?.focus()
+    },
+    [_month, amountOfMonths, firstDayOfWeek, setMonth],
+  )
 
   return (
     <StylesProvider value={styles}>
