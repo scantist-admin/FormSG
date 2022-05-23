@@ -50,6 +50,15 @@ export const Day = forwardRef<DayProps, 'button'>(
       isToday,
     })
 
+    const hideDay = useMemo(
+      () => !!hideOutsideDates && outside,
+      [hideOutsideDates, outside],
+    )
+
+    if (hideDay) {
+      return null
+    }
+
     return (
       <Box px="2px" _focusWithin={{ zIndex: 1 }}>
         <chakra.button

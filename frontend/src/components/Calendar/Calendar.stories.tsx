@@ -15,4 +15,5 @@ Default.args = {}
 export const MultiCalendar = Template.bind({})
 MultiCalendar.args = {
   amountOfMonths: 2,
+  hideOutsideDates: true,
 }
