@@ -1,6 +1,14 @@
 /* eslint-env node */
+const path = require('path')
+
 module.exports = {
   staticDirs: ['../public'],
+  features: {
+    storyStoreV7: true,
+  },
+  core: {
+    builder: 'webpack5',
+  },
   stories: [
     // Introduction stories set first so stories are ordered correctly.
     './introduction/Welcome/Welcome.stories.tsx',
@@ -13,14 +21,19 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-a11y',
-    'storybook-preset-craco',
-    'storybook-react-i18next',
     {
-      name: 'storybook-addon-turbo-build',
+      name: 'storybook-preset-craco',
       options: {
-        optimizationLevel: 2,
+        cracoConfigFile: path.join(__dirname, 'craco.storybook.config.js'),
       },
     },
+    'storybook-react-i18next',
+    // {
+    //   name: 'storybook-addon-turbo-build',
+    //   options: {
+    //     optimizationLevel: 2,
+    //   },
+    // },
     '@storybook/addon-interactions',
   ],
   // webpackFinal setup retrieved from ChakraUI's own Storybook setup
