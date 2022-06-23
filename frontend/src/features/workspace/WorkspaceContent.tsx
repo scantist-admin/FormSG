@@ -129,6 +129,7 @@ export const WorkspaceContent = ({
           borderBottom="1px solid var(--chakra-colors-neutral-300)"
           px="2rem"
           py="1rem"
+          ref={topRef}
         >
           <WorkspaceHeader
             isLoading={isLoading}
@@ -137,7 +138,6 @@ export const WorkspaceContent = ({
           />
         </Container>
         <Box gridArea="main">
-          <Box ref={topRef} />
           <WorkspaceFormRows rows={paginatedData} isLoading={isLoading} />
         </Box>
         <Container
