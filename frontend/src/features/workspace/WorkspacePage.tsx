@@ -26,16 +26,31 @@ interface WorkspaceTabProps {
 }
 
 const WorkspaceTab = ({ label, numForms }: WorkspaceTabProps): JSX.Element => {
+  const truncateLongTextWithEllipsis = (text: string): string => {
+    const MAX_CHAR_LEN = 16
+    return text.length > MAX_CHAR_LEN
+      ? `${text.substring(0, MAX_CHAR_LEN)}...`
+      : text
+  }
+
+  const truncateLargeNumberWithPlus = (number: number): string => {
+    const MAX_NUM = 100000
+    return number > MAX_NUM
+      ? `${MAX_NUM.toLocaleString()}+`
+      : number.toLocaleString()
+  }
+
   return (
     <Tab justifyContent="flex-start">
-      <Flex ml="1rem" pr="1rem" justifyContent="space-between" w="100%">
-        <Text textStyle="body-2">{label}</Text>
-        <Text textStyle="body-2">{numForms}</Text>
+      <Flex ml="1rem" justifyContent="space-between" w="100%">
+        <Text textStyle="body-2">{truncateLongTextWithEllipsis(label)}</Text>
+        <Text textStyle="body-2">{truncateLargeNumberWithPlus(numForms)}</Text>
       </Flex>
     </Tab>
   )
 }
 
+// TODO (hans): Add mobile view for WorkspacePage, probably split the views
 export const WorkspacePage = (): JSX.Element => {
   const { user, isLoading: isUserLoading } = useUser()
   const { ref, onMouseDown } = useDraggable<HTMLDivElement>()
@@ -60,18 +75,23 @@ export const WorkspacePage = (): JSX.Element => {
   const MOCK_WORKSPACES_DATA = [
     {
       _id: '1',
-      title: 'General',
-      numForms: 12,
+      title: 'All forms',
+      numForms: 531159249035,
     },
     {
       _id: '2',
       title: 'Product feedback',
-      numForms: 100000,
+      numForms: 35002,
     },
     {
       _id: '3',
       title: 'Public sentiment',
-      numForms: 553,
+      numForms: 12,
+    },
+    {
+      _id: '4',
+      title: 'Very long number of forms',
+      numForms: 531159214021,
     },
   ]
 
@@ -83,11 +103,9 @@ export const WorkspacePage = (): JSX.Element => {
           h="max-content"
           ref={ref}
           onMouseDown={onMouseDown}
-          overflowX={{ base: 'auto', md: 'initial' }}
-          position={{ base: 'fixed', md: 'sticky' }}
-          zIndex={{ base: 'docked', md: 0 }}
-          top={{ base: 0, md: '2rem' }}
-          minW={{ base: 0, md: '15.5rem' }}
+          position="sticky"
+          top="2rem"
+          minW="15.5rem"
           w="auto"
           __css={{
             scrollbarWidth: 0,
@@ -109,6 +127,7 @@ export const WorkspacePage = (): JSX.Element => {
               aria-label="Create new workspace"
               variant="clear"
               colorScheme="secondary"
+              // TODO (hans); Implement add workspace model view
               onClick={() => null}
               icon={<BiPlus />}
             />
