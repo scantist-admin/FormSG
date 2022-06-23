@@ -160,6 +160,7 @@ export const WorkspacePage = (): JSX.Element => {
           >
             {MOCK_WORKSPACES_DATA.map((workspace) => (
               <WorkspaceTab
+                key={workspace._id}
                 label={workspace.title}
                 numForms={workspace.numForms}
               />
@@ -168,7 +169,7 @@ export const WorkspacePage = (): JSX.Element => {
         </Flex>
         <TabPanels>
           {MOCK_WORKSPACES_DATA.map((workspace) => (
-            <TabPanel>
+            <TabPanel key={workspace._id}>
               <WorkspaceContent workspaceId={workspace._id} />
             </TabPanel>
           ))}
