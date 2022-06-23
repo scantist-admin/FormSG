@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react'
 
 import { ROLLOUT_ANNOUNCEMENT_KEY_PREFIX } from '~constants/localStorage'
-import { useDraggable } from '~hooks/useDraggable'
 import { useLocalStorage } from '~hooks/useLocalStorage'
 import IconButton from '~components/IconButton'
 
@@ -41,8 +40,8 @@ const WorkspaceTab = ({ label, numForms }: WorkspaceTabProps): JSX.Element => {
   }
 
   return (
-    <Tab justifyContent="flex-start">
-      <Flex ml="1rem" justifyContent="space-between" w="100%">
+    <Tab justifyContent="flex-start" pl="2rem" pr="1.5rem">
+      <Flex justifyContent="space-between" w="100%">
         <Text textStyle="body-2">{truncateLongTextWithEllipsis(label)}</Text>
         <Text textStyle="body-2">{truncateLargeNumberWithPlus(numForms)}</Text>
       </Flex>
@@ -53,7 +52,6 @@ const WorkspaceTab = ({ label, numForms }: WorkspaceTabProps): JSX.Element => {
 // TODO (hans): Add mobile view for WorkspacePage, probably split the views
 export const WorkspacePage = (): JSX.Element => {
   const { user, isLoading: isUserLoading } = useUser()
-  const { ref, onMouseDown } = useDraggable<HTMLDivElement>()
 
   const ROLLOUT_ANNOUNCEMENT_KEY = useMemo(
     () => ROLLOUT_ANNOUNCEMENT_KEY_PREFIX + user?._id,
@@ -101,8 +99,6 @@ export const WorkspacePage = (): JSX.Element => {
       <Tabs isLazy isManual orientation="vertical" variant="line">
         <Flex
           h="max-content"
-          ref={ref}
-          onMouseDown={onMouseDown}
           position="sticky"
           top="2rem"
           minW="15.5rem"
