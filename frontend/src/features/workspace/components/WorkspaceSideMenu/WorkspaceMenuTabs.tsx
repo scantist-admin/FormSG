@@ -5,23 +5,23 @@ import {
   truncateLongTextWithEllipsis,
 } from './utils'
 
-interface WorkspaceMenuTabProps extends FlexProps {
+interface WorkspaceTabProps extends FlexProps {
   label: string
   numForms: number
   isSelected: boolean
   onClick: () => void
 }
 
-export const WorkspaceMenuTab = ({
+const WorkspaceTab = ({
   label,
   numForms,
   isSelected,
   onClick,
   ...props
-}: WorkspaceMenuTabProps): JSX.Element => {
+}: WorkspaceTabProps): JSX.Element => {
   const styles = isSelected
     ? {
-        borderLeft: '4px',
+        borderLeft: '2px',
         borderLeftColor: 'var(--chakra-colors-primary-500)',
         textColor: 'var(--chakra-colors-primary-500)',
       }
@@ -40,6 +40,7 @@ export const WorkspaceMenuTab = ({
         textColor: 'var(--chakra-colors-primary-500)',
       }}
       onClick={onClick}
+      aria-label={`${label} workspace tab`}
       {...styles}
       {...props}
     >
@@ -50,3 +51,27 @@ export const WorkspaceMenuTab = ({
     </Flex>
   )
 }
+
+interface WorkspaceMenuTabsProps {
+  // TODO (hans): Change workspace type to use WorkspaceDto when its created
+  workspaces: any
+  currWorkspace: string
+  onClick: (id: string) => void
+}
+export const WorkspaceMenuTabs = ({
+  workspaces,
+  currWorkspace,
+  onClick,
+}: WorkspaceMenuTabsProps): JSX.Element => (
+  <>
+    {workspaces.map((workspace: any) => (
+      <WorkspaceTab
+        key={workspace._id}
+        label={workspace.title}
+        numForms={workspace.numForms}
+        isSelected={workspace._id === currWorkspace}
+        onClick={() => onClick(workspace._id)}
+      />
+    ))}
+  </>
+)
