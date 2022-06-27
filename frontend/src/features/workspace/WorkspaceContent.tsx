@@ -136,7 +136,6 @@ export const WorkspaceContent = ({
         >
           <WorkspaceHeader
             isLoading={isLoading}
-            totalFormCount={totalFormCount}
             handleOpenCreateFormModal={createFormModalDisclosure.onOpen}
           />
         </Container>
