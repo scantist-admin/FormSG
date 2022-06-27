@@ -21,7 +21,11 @@ export const WorkspaceMenuHeader = ({
 
   return (
     <>
-      <CreateOrRenameWorkspaceModal onClose={onClose} isOpen={isOpen} />
+      <CreateOrRenameWorkspaceModal
+        onClose={onClose}
+        isOpen={isOpen}
+        isCreatingWorkspace={true}
+      />
       <Flex
         justifyContent={{ base: 'inherit', md: 'space-between' }}
         px={{ base: '1.5rem', md: '2rem' }}
