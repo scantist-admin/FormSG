@@ -4,7 +4,7 @@ import { Flex, FlexProps, Text, useDisclosure } from '@chakra-ui/react'
 import { useIsMobile } from '~hooks/useIsMobile'
 import IconButton from '~components/IconButton'
 
-import { CreateOrRenameWorkspaceModal } from '../WorkspaceModals/CreateOrRenameWorkspaceModal'
+import { CreateWorkspaceModal } from '../WorkspaceModals/CreateWorkspaceModal'
 
 interface WorkspaceMenuHeaderProps extends FlexProps {
   shouldShowAddWorkspaceButton?: boolean
@@ -21,11 +21,7 @@ export const WorkspaceMenuHeader = ({
 
   return (
     <>
-      <CreateOrRenameWorkspaceModal
-        onClose={onClose}
-        isOpen={isOpen}
-        isCreatingWorkspace={true}
-      />
+      <CreateWorkspaceModal onClose={onClose} isOpen={isOpen} />
       <Flex
         justifyContent={{ base: 'inherit', md: 'space-between' }}
         px={{ base: '1.5rem', md: '2rem' }}
