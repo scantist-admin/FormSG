@@ -12,6 +12,9 @@ import { chunk } from 'lodash'
 
 import Pagination from '~components/Pagination'
 
+import { useUserMutations } from '~features/user/mutations'
+import { useUser } from '~features/user/queries'
+import { getShowLatestFeatureUpdateNotification } from '~features/whats-new/utils/utils'
 import { WhatsNewDrawer } from '~features/whats-new/WhatsNewDrawer'
 
 import CreateFormModal from './components/CreateFormModal'
@@ -108,6 +111,20 @@ export const WorkspacePage = (): JSX.Element => {
     createFormModalDisclosure,
     whatsNewFeatureDrawerDisclosure,
   } = useWorkspaceForms()
+  const { updateUserLastSeenFeatureUpdateDateMutation } = useUserMutations()
+  const { user, isLoading: isUserLoading } = useUser()
+  const shouldShowFeatureUpdateNotification = useMemo(() => {
+    if (isUserLoading || !user) return false
+    return getShowLatestFeatureUpdateNotification(user)
+  }, [isUserLoading, user])
+
+  const onWhatsNewDrawerOpen = useCallback(() => {
+    whatsNewFeatureDrawerDisclosure.onOpen()
+    updateUserLastSeenFeatureUpdateDateMutation.mutate()
+  }, [
+    updateUserLastSeenFeatureUpdateDateMutation,
+    whatsNewFeatureDrawerDisclosure,
+  ])
 
   return (
     <>
@@ -143,7 +160,8 @@ export const WorkspacePage = (): JSX.Element => {
               isLoading={isLoading}
               totalFormCount={totalFormCount}
               handleOpenCreateFormModal={createFormModalDisclosure.onOpen}
-              handleOpenWhatsNewDrawer={whatsNewFeatureDrawerDisclosure.onOpen}
+              handleOpenWhatsNewDrawer={onWhatsNewDrawerOpen}
+              isWhatsNewButtonSolid={shouldShowFeatureUpdateNotification}
             />
           </Container>
           <Box gridArea="main">
