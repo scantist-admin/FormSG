@@ -125,7 +125,7 @@ export const WorkspacePage = (): JSX.Element => {
       >
         {isMobile ? (
           <WorkspaceMenuHeader
-            shouldShowAddWorkspaceModal={false}
+            shouldShowAddWorkspaceButton={false}
             onMenuClick={mobileDrawer.onOpen}
             borderBottom="1px"
             borderBottomColor="neutral.300"

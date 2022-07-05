@@ -5,12 +5,12 @@ import { useIsMobile } from '~hooks/useIsMobile'
 import IconButton from '~components/IconButton'
 
 interface WorkspaceMenuHeaderProps extends FlexProps {
-  shouldShowAddWorkspaceModal?: boolean
+  shouldShowAddWorkspaceButton?: boolean
   onMenuClick?: () => void
 }
 
 export const WorkspaceMenuHeader = ({
-  shouldShowAddWorkspaceModal = true,
+  shouldShowAddWorkspaceButton = true,
   onMenuClick,
   ...props
 }: WorkspaceMenuHeaderProps): JSX.Element => {
@@ -39,7 +39,7 @@ export const WorkspaceMenuHeader = ({
         </Text>
       </Flex>
 
-      {shouldShowAddWorkspaceModal && (
+      {shouldShowAddWorkspaceButton && (
         <IconButton
           size="sm"
           h="1.5rem"
