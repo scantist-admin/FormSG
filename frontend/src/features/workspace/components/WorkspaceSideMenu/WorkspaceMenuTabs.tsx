@@ -1,9 +1,6 @@
 import { Flex, FlexProps, Text } from '@chakra-ui/react'
 
-import {
-  truncateLargeNumberWithPlus,
-  truncateLongTextWithEllipsis,
-} from './utils'
+import { truncateLargeNumberWithPlus } from './utils'
 
 interface WorkspaceTabProps extends FlexProps {
   label: string
@@ -44,8 +41,8 @@ const WorkspaceTab = ({
       {...styles}
       {...props}
     >
-      <Text textStyle="body-2" whiteSpace="nowrap">
-        {truncateLongTextWithEllipsis(label)}
+      <Text textStyle="body-2" whiteSpace="nowrap" isTruncated>
+        {label}
       </Text>
       <Text textStyle="body-2">{truncateLargeNumberWithPlus(numForms)}</Text>
     </Flex>
