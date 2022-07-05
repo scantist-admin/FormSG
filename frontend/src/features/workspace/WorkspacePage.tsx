@@ -19,6 +19,7 @@ import { RolloutAnnouncementModal } from '~features/rollout-announcement/Rollout
 import { useUser } from '~features/user/queries'
 import { WorkspaceContent } from '~features/workspace/WorkspaceContent'
 
+import CreateFormModal from './components/CreateFormModal'
 import { EmptyWorkspace } from './components/EmptyWorkspace'
 import { WorkspaceMenuHeader } from './components/WorkspaceSideMenu/WorkspaceMenuHeader'
 import { WorkspaceMenuTabs } from './components/WorkspaceSideMenu/WorkspaceMenuTabs'
@@ -47,12 +48,18 @@ export const WorkspacePage = (): JSX.Element => {
     [isUserLoading, hasSeenAnnouncement],
   )
 
-  if (dashboardForms?.length === 0) {
+  if (isDashboardLoading || dashboardForms?.length === 0) {
     return (
-      <EmptyWorkspace
-        isLoading={isDashboardLoading}
-        handleOpenCreateFormModal={createFormModal.onOpen}
-      />
+      <>
+        <CreateFormModal
+          isOpen={createFormModal.isOpen}
+          onClose={createFormModal.onClose}
+        />
+        <EmptyWorkspace
+          isLoading={isDashboardLoading}
+          handleOpenCreateFormModal={createFormModal.onOpen}
+        />
+      </>
     )
   }
 
