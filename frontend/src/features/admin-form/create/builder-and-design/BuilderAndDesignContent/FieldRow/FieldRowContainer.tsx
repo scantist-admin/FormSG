@@ -21,6 +21,7 @@ import IconButton from '~components/IconButton'
 import {
   AttachmentField,
   CheckboxField,
+  CountryField,
   DateField,
   DecimalField,
   DropdownField,
@@ -338,6 +339,8 @@ const MemoFieldRow = memo(({ field, ...rest }: MemoFieldRowProps) => {
       return <DateField schema={field} {...rest} />
     case BasicField.Dropdown:
       return <DropdownField schema={field} {...rest} />
+    case BasicField.Country:
+      return <CountryField schema={field} {...rest} />
     case BasicField.ShortText:
       return <ShortTextField schema={field} {...rest} />
     case BasicField.LongText:
@@ -352,7 +355,5 @@ const MemoFieldRow = memo(({ field, ...rest }: MemoFieldRowProps) => {
       return <YesNoField schema={field} {...rest} />
     case BasicField.Table:
       return <TableField schema={field} {...rest} />
-    default:
-      return <div>TODO: Add field row for {field.fieldType}</div>
   }
 })
