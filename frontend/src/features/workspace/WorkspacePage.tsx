@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
+  Box,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -70,7 +71,7 @@ export const WorkspacePage = (): JSX.Element => {
     [isUserLoading, hasSeenAnnouncement, hasSeenEmergencyContact, user],
   )
 
-  if (isDashboardLoading || dashboardForms?.length === 0) {
+  if (dashboardForms?.length === 0) {
     return (
       <>
         <CreateFormModal
@@ -117,10 +118,7 @@ export const WorkspacePage = (): JSX.Element => {
         </DrawerContent>
       </Drawer>
 
-      <Grid
-        templateColumns={{ base: 'inherit', lg: '15.5rem 1fr' }}
-        minH="100vh"
-      >
+      <Grid templateColumns={{ base: 'inherit', lg: '15.5rem 1fr' }} h="100vh">
         {isMobile ? (
           <WorkspaceMenuHeader
             shouldShowAddWorkspaceButton={false}
@@ -130,14 +128,20 @@ export const WorkspacePage = (): JSX.Element => {
             py="1rem"
           />
         ) : (
-          <Stack borderRight="1px" borderRightColor="neutral.300">
-            <WorkspaceMenuHeader />
-            <WorkspaceMenuTabs
-              workspaces={workspaces ?? []}
-              currWorkspace={currWorkspaceId}
-              onClick={setCurrWorkspaceId}
-            />
-          </Stack>
+          <Box overflowY="scroll">
+            <Stack
+              borderRight="1px"
+              borderRightColor="neutral.300"
+              minH="100vh"
+            >
+              <WorkspaceMenuHeader />
+              <WorkspaceMenuTabs
+                workspaces={workspaces ?? []}
+                currWorkspace={currWorkspaceId}
+                onClick={setCurrWorkspaceId}
+              />
+            </Stack>
+          </Box>
         )}
         <WorkspaceContent workspaceId={currWorkspaceId} />
       </Grid>

@@ -20,7 +20,7 @@ export const WorkspaceMenuHeader = ({
     <Flex
       justifyContent={{ base: 'inherit', md: 'space-between' }}
       px={{ base: '1.5rem', md: '2rem' }}
-      mt={{ base: 0, md: '1.5rem' }}
+      mt={{ base: 0, md: '1rem' }}
       {...props}
       alignItems="center"
     >
@@ -31,7 +31,8 @@ export const WorkspaceMenuHeader = ({
             onClick={() => onMenuClick && onMenuClick()}
             aria-label="open workspace drawer"
             variant="clear"
-            colorScheme="secondary"
+            colorScheme="primary"
+            color="secondary.500"
           />
         )}
         <Text textStyle="h4" color="secondary.700">
@@ -41,12 +42,11 @@ export const WorkspaceMenuHeader = ({
 
       {shouldShowAddWorkspaceButton && (
         <IconButton
-          size="sm"
-          h="1.5rem"
-          w="1.5rem"
+          size="lg"
           aria-label="Create new workspace"
           variant="clear"
-          colorScheme="secondary"
+          colorScheme="primary"
+          color="secondary.500"
           // TODO (hans): Implement add workspace modal view
           onClick={() => null}
           icon={<BiPlus />}
