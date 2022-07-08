@@ -1,4 +1,4 @@
-export enum Country {
+export enum CountryRegion {
   Afghanistan = 'AFGHANISTAN',
   Albania = 'ALBANIA',
   Algeria = 'ALGERIA',

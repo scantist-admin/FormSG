@@ -1,4 +1,4 @@
-import { Country } from '~shared/constants/countries'
+import { CountryRegion } from '~shared/constants/countries-regions'
 import {
   BasicField,
   DropdownFieldBase,
@@ -21,7 +21,7 @@ export const CountryField = ({ schema }: CountryFieldProps): JSX.Element => {
       schema={{
         ...schema,
         fieldType: BasicField.Dropdown,
-        fieldOptions: Object.values(Country),
+        fieldOptions: Object.values(CountryRegion),
       }}
     />
   )
