@@ -9,6 +9,7 @@ import {
   Flex,
   Grid,
   Stack,
+  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react'
 
@@ -16,7 +17,6 @@ import {
   EMERGENCY_CONTACT_KEY_PREFIX,
   ROLLOUT_ANNOUNCEMENT_KEY_PREFIX,
 } from '~constants/localStorage'
-import { useIsMobile } from '~hooks/useIsMobile'
 import { useLocalStorage } from '~hooks/useLocalStorage'
 
 import { RolloutAnnouncementModal } from '~features/rollout-announcement/RolloutAnnouncementModal'
@@ -33,7 +33,12 @@ import { useDashboard, useWorkspace } from './queries'
 export const WorkspacePage = (): JSX.Element => {
   const [currWorkspaceId, setCurrWorkspaceId] = useState<string>('')
 
-  const isMobile = useIsMobile()
+  const shouldUseTopMenu = useBreakpointValue({
+    base: true,
+    xs: true,
+    md: true,
+    lg: false,
+  })
   const createFormModal = useDisclosure()
   const mobileDrawer = useDisclosure()
 
@@ -99,6 +104,8 @@ export const WorkspacePage = (): JSX.Element => {
             <Flex pt="1rem" px="1rem" alignItems="center">
               <WorkspaceMenuHeader
                 onMenuClick={mobileDrawer.onClose}
+                shouldShowAddWorkspaceButton
+                shouldShowMenuIcon
                 justifyContent="space-between"
                 w="100%"
                 px={0}
@@ -119,9 +126,9 @@ export const WorkspacePage = (): JSX.Element => {
       </Drawer>
 
       <Grid templateColumns={{ base: 'inherit', lg: '15.5rem 1fr' }} h="100vh">
-        {isMobile ? (
+        {shouldUseTopMenu ? (
           <WorkspaceMenuHeader
-            shouldShowAddWorkspaceButton={false}
+            shouldShowMenuIcon
             onMenuClick={mobileDrawer.onOpen}
             borderBottom="1px"
             borderBottomColor="neutral.300"
@@ -134,7 +141,7 @@ export const WorkspacePage = (): JSX.Element => {
               borderRightColor="neutral.300"
               minH="100vh"
             >
-              <WorkspaceMenuHeader />
+              <WorkspaceMenuHeader shouldShowAddWorkspaceButton />
               <WorkspaceMenuTabs
                 workspaces={workspaces ?? []}
                 currWorkspace={currWorkspaceId}
