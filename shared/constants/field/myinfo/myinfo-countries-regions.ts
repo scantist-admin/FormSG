@@ -1,4 +1,4 @@
-const myInfoCountries = [
+const myInfoCountriesRegions = [
   'AFGHANISTAN',
   'ALBANIA',
   'ALGERIA',
@@ -255,4 +255,4 @@ const myInfoCountries = [
   'ZIMBABWE',
 ]
 
-export default myInfoCountries
+export default myInfoCountriesRegions

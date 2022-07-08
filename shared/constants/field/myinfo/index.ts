@@ -1,5 +1,5 @@
 import { BasicField, MyInfoAttribute, MyInfoField } from '../../../types/field'
-import COUNTRIES from './myinfo-countries'
+import COUNTRIES_REGIONS from './myinfo-countries-regions'
 import DIALECTS from './myinfo-dialects'
 import NATIONALITIES from './myinfo-nationalities'
 import OCCUPATIONS from './myinfo-occupations'
@@ -91,7 +91,7 @@ export const types: MyInfoFieldBlock[] = [
     description:
       'The birth country of the form-filler. This field is verified by ICA for Singaporeans/PRs & foreigners on Long-Term Visit Pass, and by MOM for Employment Pass holders.',
     fieldType: BasicField.Dropdown,
-    fieldOptions: COUNTRIES,
+    fieldOptions: COUNTRIES_REGIONS,
     previewValue: 'SINGAPORE',
   },
   {
@@ -195,7 +195,7 @@ export const types: MyInfoFieldBlock[] = [
     description:
       'The country of marriage of the form-filler. This field is treated as unverified, as data provided by MSF may be outdated in cases of marriages in a foreign country.',
     fieldType: BasicField.Dropdown,
-    fieldOptions: COUNTRIES,
+    fieldOptions: COUNTRIES_REGIONS,
     previewValue: 'SINGAPORE',
   },
   {
