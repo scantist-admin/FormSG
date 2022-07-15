@@ -1,6 +1,7 @@
 import { Mongoose, Schema } from 'mongoose'
+import { AdminWorkspaceDto } from 'shared/types/workspace'
 
-import { IWorkspaceModel, IWorkspaceSchema } from '../../types'
+import { IUserSchema, IWorkspaceModel, IWorkspaceSchema } from '../../types'
 
 import getFormModel from './form.server.model'
 import getUserModel from './user.server.model'
@@ -74,6 +75,16 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
   WorkspaceSchema.index({
     admin: 1,
   })
+
+  WorkspaceSchema.virtual('numForms').get(function (this: IWorkspaceSchema) {
+    return this.formIds.length
+  })
+
+  WorkspaceSchema.statics.getWorkspaces = async function (
+    admin: IUserSchema['_id'],
+  ): Promise<AdminWorkspaceDto[]> {
+    return this.find({ admin: admin }).sort('title').exec()
+  }
 
   return db.model<IWorkspaceSchema, IWorkspaceModel>(
     WORKSPACE_SCHEMA_ID,
