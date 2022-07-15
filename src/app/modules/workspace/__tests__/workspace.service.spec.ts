@@ -21,7 +21,7 @@ describe('workspace.service', () => {
           admin: 'user' as UserId,
           title: 'workspace1',
           formIds: [] as FormId[],
-          numForms: 0,
+          count: 0,
         },
       ] as AdminWorkspaceDto[]
       const mockUserId = 'mockUserId'

@@ -8,7 +8,7 @@ export type Workspace = {
   title: string
   formIds: FormId[]
   admin: UserId
-  numForms: number
+  count: number
 }
 
 export type AdminWorkspaceDto = Workspace

@@ -76,7 +76,7 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
     admin: 1,
   })
 
-  WorkspaceSchema.virtual('numForms').get(function (this: IWorkspaceSchema) {
+  WorkspaceSchema.virtual('count').get(function (this: IWorkspaceSchema) {
     return this.formIds.length
   })
 
