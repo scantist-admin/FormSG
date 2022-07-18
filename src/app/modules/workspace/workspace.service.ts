@@ -70,12 +70,11 @@ export const updateWorkspaceTitle = (
       })
       return transformMongoError(error)
     },
-  ).andThen((updatedWorkspace) => {
-    if (!updatedWorkspace) {
-      return errAsync(new WorkspaceNotFoundError())
-    }
-    return okAsync(updatedWorkspace)
-  })
+  ).andThen((updatedWorkspace) =>
+    updatedWorkspace
+      ? okAsync(updatedWorkspace)
+      : errAsync(new WorkspaceNotFoundError()),
+  )
 }
 
 export const deleteWorkspace = (
