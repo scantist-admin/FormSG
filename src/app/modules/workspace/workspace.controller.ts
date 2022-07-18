@@ -2,7 +2,7 @@ import { celebrate, Joi, Segments } from 'celebrate'
 import { AuthedSessionData } from 'express-session'
 import { StatusCodes } from 'http-status-codes'
 import { ErrorDto } from 'shared/types'
-import { AdminWorkspaceDto } from 'shared/types/workspace'
+import { WorkspaceDto } from 'shared/types/workspace'
 
 import { createLoggerWithLabel } from '../../config/logger'
 import { ControllerHandler } from '../core/core.types'
@@ -13,14 +13,10 @@ import { mapRouteError } from './workspace.utils'
 const logger = createLoggerWithLabel(module)
 
 // Validators
-const createWorkspaceValidator = celebrate({
+const workspaceTitleValidator = celebrate({
   [Segments.BODY]: {
     title: Joi.string().min(4).max(200).required(),
   },
-})
-
-const updateWorkspaceTitleValidator = celebrate({
-  [Segments.BODY]: {},
 })
 
 /**
@@ -32,7 +28,7 @@ const updateWorkspaceTitleValidator = celebrate({
  */
 export const getWorkspaces: ControllerHandler<
   unknown,
-  AdminWorkspaceDto[] | ErrorDto
+  WorkspaceDto[] | ErrorDto
 > = async (req, res) => {
   const userId = (req.session as AuthedSessionData).user._id
 
@@ -63,7 +59,7 @@ export const getWorkspaces: ControllerHandler<
  */
 export const handleCreateWorkspace: ControllerHandler<
   unknown,
-  AdminWorkspaceDto | ErrorDto,
+  WorkspaceDto | ErrorDto,
   { title: string }
 > = async (req, res) => {
   const { title } = req.body
@@ -88,7 +84,7 @@ export const handleCreateWorkspace: ControllerHandler<
 }
 
 export const createWorkspace = [
-  createWorkspaceValidator,
+  workspaceTitleValidator,
   handleCreateWorkspace,
 ] as ControllerHandler[]
 
@@ -103,7 +99,7 @@ export const createWorkspace = [
  */
 const handleUpdateWorkspaceTitle: ControllerHandler<
   unknown,
-  any | ErrorDto,
+  WorkspaceDto | ErrorDto,
   { title: string }
 > = async (req, res) => {
   const { title } = req.body
@@ -115,7 +111,7 @@ const handleUpdateWorkspaceTitle: ControllerHandler<
 }
 
 export const updateWorkspaceTitle = [
-  updateWorkspaceTitleValidator,
+  workspaceTitleValidator,
   handleUpdateWorkspaceTitle,
 ] as ControllerHandler[]
 

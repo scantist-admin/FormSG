@@ -1,5 +1,5 @@
 import { Mongoose, Schema } from 'mongoose'
-import { AdminWorkspaceDto } from 'shared/types/workspace'
+import { WorkspaceDto } from 'shared/types/workspace'
 
 import { IUserSchema, IWorkspaceModel, IWorkspaceSchema } from '../../types'
 
@@ -82,14 +82,14 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
 
   WorkspaceSchema.statics.getWorkspaces = async function (
     admin: IUserSchema['_id'],
-  ): Promise<AdminWorkspaceDto[]> {
+  ): Promise<WorkspaceDto[]> {
     return this.find({ admin: admin }).sort('title').exec()
   }
 
   WorkspaceSchema.statics.createWorkspace = async function (
     title: string,
     admin: IUserSchema['_id'],
-  ): Promise<AdminWorkspaceDto> {
+  ): Promise<WorkspaceDto> {
     return this.create({ title, admin, formIds: [] })
   }
 

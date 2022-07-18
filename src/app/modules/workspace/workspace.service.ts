@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { okAsync, ResultAsync } from 'neverthrow'
-import { AdminWorkspaceDto } from 'shared/types/workspace'
+import { WorkspaceDto } from 'shared/types/workspace'
 
 import { createLoggerWithLabel } from '../../config/logger'
 import { getWorkspaceModel } from '../../models/workspace.server.model'
@@ -12,7 +12,7 @@ const WorkspaceModel = getWorkspaceModel(mongoose)
 
 export const getWorkspaces = (
   userId: string,
-): ResultAsync<AdminWorkspaceDto[], DatabaseError> => {
+): ResultAsync<WorkspaceDto[], DatabaseError> => {
   return ResultAsync.fromPromise(
     WorkspaceModel.getWorkspaces(userId),
     (error) => {
@@ -32,7 +32,7 @@ export const getWorkspaces = (
 export const createWorkspace = (
   userId: string,
   title: string,
-): ResultAsync<AdminWorkspaceDto, DatabaseError | DatabaseValidationError> => {
+): ResultAsync<WorkspaceDto, DatabaseError | DatabaseValidationError> => {
   return ResultAsync.fromPromise(
     WorkspaceModel.createWorkspace(title, userId),
     (error) => {

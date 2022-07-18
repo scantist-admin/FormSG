@@ -11,4 +11,4 @@ export type Workspace = {
   count: number
 }
 
-export type AdminWorkspaceDto = Workspace
+export type WorkspaceDto = Workspace

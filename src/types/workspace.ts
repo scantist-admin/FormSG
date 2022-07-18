@@ -1,5 +1,5 @@
 import { Document, Model } from 'mongoose'
-import { AdminWorkspaceDto } from 'shared/types/workspace'
+import { WorkspaceDto } from 'shared/types/workspace'
 
 import { IFormSchema } from './form'
 import { IUserSchema } from './user'
@@ -17,9 +17,9 @@ export interface IWorkspaceSchema extends IWorkspace, Document {
 }
 
 export interface IWorkspaceModel extends Model<IWorkspaceSchema> {
-  getWorkspaces(admin: IUserSchema['_id']): Promise<AdminWorkspaceDto[]>
+  getWorkspaces(admin: IUserSchema['_id']): Promise<WorkspaceDto[]>
   createWorkspace(
     title: string,
     admin: IUserSchema['_id'],
-  ): Promise<AdminWorkspaceDto>
+  ): Promise<WorkspaceDto>
 }

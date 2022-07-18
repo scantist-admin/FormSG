@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import mongoose from 'mongoose'
 import { FormId, UserId } from 'shared/types'
-import { AdminWorkspaceDto } from 'shared/types/workspace'
+import { WorkspaceDto } from 'shared/types/workspace'
 
 import { getWorkspaceModel } from 'src/app/models/workspace.server.model'
 import * as WorkspaceService from 'src/app/modules/workspace/workspace.service'
@@ -25,7 +25,7 @@ describe('workspace.service', () => {
           formIds: [] as FormId[],
           count: 0,
         },
-      ] as AdminWorkspaceDto[]
+      ] as WorkspaceDto[]
       const mockUserId = 'mockUserId'
       const getSpy = jest
         .spyOn(WorkspaceModel, 'getWorkspaces')
