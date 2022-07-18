@@ -86,6 +86,13 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
     return this.find({ admin: admin }).sort('title').exec()
   }
 
+  WorkspaceSchema.statics.createWorkspace = async function (
+    title: string,
+    admin: IUserSchema['_id'],
+  ): Promise<AdminWorkspaceDto> {
+    return this.create({ title, admin, formIds: [] })
+  }
+
   return db.model<IWorkspaceSchema, IWorkspaceModel>(
     WORKSPACE_SCHEMA_ID,
     WorkspaceSchema,

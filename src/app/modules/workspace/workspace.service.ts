@@ -4,15 +4,15 @@ import { AdminWorkspaceDto } from 'shared/types/workspace'
 
 import { createLoggerWithLabel } from '../../config/logger'
 import { getWorkspaceModel } from '../../models/workspace.server.model'
-import { DatabaseError } from '../core/core.errors'
-import { MissingUserError } from '../user/user.errors'
+import { transformMongoError } from '../../utils/handle-mongo-error'
+import { DatabaseError, DatabaseValidationError } from '../core/core.errors'
 
 const logger = createLoggerWithLabel(module)
 const WorkspaceModel = getWorkspaceModel(mongoose)
 
 export const getWorkspaces = (
   userId: string,
-): ResultAsync<AdminWorkspaceDto[], MissingUserError | DatabaseError> => {
+): ResultAsync<AdminWorkspaceDto[], DatabaseError> => {
   return ResultAsync.fromPromise(
     WorkspaceModel.getWorkspaces(userId),
     (error) => {
@@ -24,16 +24,30 @@ export const getWorkspaces = (
         },
         error,
       })
-      return new DatabaseError()
+      return transformMongoError(error)
     },
   )
 }
 
 export const createWorkspace = (
   userId: string,
-  workspace: any,
-): ResultAsync<any, DatabaseError> => {
-  return okAsync({ workspace: workspace, userId: userId })
+  title: string,
+): ResultAsync<AdminWorkspaceDto, DatabaseError | DatabaseValidationError> => {
+  return ResultAsync.fromPromise(
+    WorkspaceModel.createWorkspace(title, userId),
+    (error) => {
+      logger.error({
+        message: 'Database error when creating workspace',
+        meta: {
+          action: 'createWorkspace',
+          userId,
+          title,
+        },
+        error,
+      })
+      return transformMongoError(error)
+    },
+  )
 }
 
 export const updateWorkspaceTitle = (

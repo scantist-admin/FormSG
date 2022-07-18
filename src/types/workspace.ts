@@ -18,6 +18,8 @@ export interface IWorkspaceSchema extends IWorkspace, Document {
 
 export interface IWorkspaceModel extends Model<IWorkspaceSchema> {
   getWorkspaces(admin: IUserSchema['_id']): Promise<AdminWorkspaceDto[]>
-
-  // TODO (hans): Add workspace methods here
+  createWorkspace(
+    title: string,
+    admin: IUserSchema['_id'],
+  ): Promise<AdminWorkspaceDto>
 }
