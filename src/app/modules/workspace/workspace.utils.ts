@@ -4,6 +4,8 @@ import { createLoggerWithLabel } from '../../config/logger'
 import { ApplicationError, DatabaseError } from '../core/core.errors'
 import { ErrorResponseData } from '../core/core.types'
 
+import { WorkspaceNotFoundError } from './workspace.errors'
+
 const logger = createLoggerWithLabel(module)
 
 export const mapRouteError = (
@@ -14,6 +16,11 @@ export const mapRouteError = (
     case DatabaseError:
       return {
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        errorMessage: coreErrorMessage ?? error.message,
+      }
+    case WorkspaceNotFoundError:
+      return {
+        statusCode: StatusCodes.NOT_FOUND,
         errorMessage: coreErrorMessage ?? error.message,
       }
     default:
