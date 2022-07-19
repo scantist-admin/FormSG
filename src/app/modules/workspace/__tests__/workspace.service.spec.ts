@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ObjectId } from 'mongodb'
 import mongoose from 'mongoose'
 import { FormId, UserId } from 'shared/types'
 import { WorkspaceDto, WorkspaceId } from 'shared/types/workspace'
@@ -200,6 +201,72 @@ describe('workspace.service', () => {
 
       expect(updateSpy).toHaveBeenCalledWith(
         mockWorkspace.title,
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
+      expect(actual.isErr()).toEqual(true)
+      expect(actual._unsafeUnwrapErr()).toEqual(
+        new DatabaseError(formatErrorRecoveryMessage(mockErrorMessage)),
+      )
+    })
+  })
+
+  describe('deleteWorkspace', () => {
+    const mockWorkspace = {
+      _id: 'workspaceId' as WorkspaceId,
+      admin: 'user' as UserId,
+      title: 'workspace1',
+      formIds: [] as FormId[],
+      count: 0,
+    }
+
+    it('should successfully update workspace title', async () => {
+      const updateSpy = jest
+        .spyOn(WorkspaceModel, 'deleteWorkspace')
+        .mockResolvedValueOnce(1)
+      const actual = await WorkspaceService.deleteWorkspace(
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
+
+      expect(updateSpy).toHaveBeenCalledWith(
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
+      expect(actual.isOk()).toEqual(true)
+      expect(actual._unsafeUnwrap()).toEqual(1)
+    })
+
+    it('should return WorkspaceNotFoundError on invalid workspaceId', async () => {
+      const invalidWorkspaceId = new ObjectId().toHexString()
+      const updateSpy = jest
+        .spyOn(WorkspaceModel, 'deleteWorkspace')
+        .mockResolvedValueOnce(0)
+
+      const actual = await WorkspaceService.deleteWorkspace(
+        invalidWorkspaceId,
+        mockWorkspace.admin,
+      )
+
+      expect(updateSpy).toHaveBeenCalledWith(
+        invalidWorkspaceId,
+        mockWorkspace.admin,
+      )
+      expect(actual._unsafeUnwrapErr()).toBeInstanceOf(WorkspaceNotFoundError)
+    })
+
+    it('should return DatabaseError when error occurs whilst creating workspace', async () => {
+      const mockErrorMessage = 'some error'
+
+      const updateSpy = jest
+        .spyOn(WorkspaceModel, 'deleteWorkspace')
+        .mockRejectedValueOnce(new Error(mockErrorMessage))
+      const actual = await WorkspaceService.deleteWorkspace(
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
+
+      expect(updateSpy).toHaveBeenCalledWith(
         mockWorkspace._id,
         mockWorkspace.admin,
       )

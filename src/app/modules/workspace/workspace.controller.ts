@@ -138,7 +138,6 @@ export const updateWorkspaceTitle = [
  */
 export const deleteWorkspace: ControllerHandler<
   { workspaceId: string },
-  unknown,
   ErrorDto
 > = async (req, res) => {
   const { workspaceId } = req.params
