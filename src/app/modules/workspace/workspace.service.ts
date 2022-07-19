@@ -66,6 +66,7 @@ export const updateWorkspaceTitle = (
           action: 'updateWorkspaceTitle',
           workspaceId,
           title,
+          userId,
         },
         error,
       })
@@ -80,8 +81,27 @@ export const updateWorkspaceTitle = (
 
 export const deleteWorkspace = (
   workspaceId: string,
-): ResultAsync<any, DatabaseError> => {
-  return okAsync({ workspaceId: workspaceId })
+  userId: string,
+): ResultAsync<number, DatabaseError | WorkspaceNotFoundError> => {
+  return ResultAsync.fromPromise(
+    WorkspaceModel.deleteWorkspace(workspaceId, userId),
+    (error) => {
+      logger.error({
+        message: 'Database error when deleting workspace',
+        meta: {
+          action: 'deleteWorkspace',
+          workspaceId,
+          userId,
+        },
+        error,
+      })
+      return transformMongoError(error)
+    },
+  ).andThen((numDeleted) =>
+    numDeleted == 0
+      ? errAsync(new WorkspaceNotFoundError())
+      : okAsync(numDeleted),
+  )
 }
 
 export const getForms = (

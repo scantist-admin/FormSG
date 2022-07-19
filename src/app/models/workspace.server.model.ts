@@ -1,6 +1,7 @@
 import { Mongoose, Schema } from 'mongoose'
 import { WorkspaceDto } from 'shared/types/workspace'
 
+import { FormStatus } from '../../../shared/types/form'
 import { IUserSchema, IWorkspaceModel, IWorkspaceSchema } from '../../types'
 
 import getFormModel from './form.server.model'
@@ -103,6 +104,31 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
       { title: title },
     ).exec()
     return this.findOne({ _id: workspaceId, admin: admin }).exec()
+  }
+
+  WorkspaceSchema.statics.deleteWorkspace = async function (
+    workspaceId: IWorkspaceSchema['_id'],
+    admin: IUserSchema['_id'],
+  ): Promise<number> {
+    const workspaceToDelete = await this.findOne({
+      _id: workspaceId,
+      admin: admin,
+    })
+    const session = await this.startSession()
+
+    session.startTransaction()
+    const deleted = await this.deleteOne({
+      _id: workspaceId,
+      admin: admin,
+    })
+    await Form.updateMany(
+      { _id: { $in: workspaceToDelete?.formIds } },
+      { $set: { status: FormStatus.Archived } },
+    )
+    await session.commitTransaction()
+    session.endSession()
+
+    return deleted.deletedCount ?? 0
   }
 
   return db.model<IWorkspaceSchema, IWorkspaceModel>(
