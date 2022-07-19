@@ -96,9 +96,13 @@ const compileWorkspaceModel = (db: Mongoose): IWorkspaceModel => {
   WorkspaceSchema.statics.updateWorkspaceTitle = async function (
     title: string,
     workspaceId: IWorkspaceSchema['_id'],
+    admin: IUserSchema['_id'],
   ): Promise<WorkspaceDto | null> {
-    await this.updateOne({ _id: workspaceId }, { title: title }).exec()
-    return this.findById(workspaceId).exec()
+    await this.updateOne(
+      { _id: workspaceId, admin: admin },
+      { title: title },
+    ).exec()
+    return this.findOne({ _id: workspaceId, admin: admin }).exec()
   }
 
   return db.model<IWorkspaceSchema, IWorkspaceModel>(

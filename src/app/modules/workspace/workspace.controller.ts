@@ -103,8 +103,9 @@ export const handleUpdateWorkspaceTitle: ControllerHandler<
 > = async (req, res) => {
   const { workspaceId } = req.params
   const { title } = req.body
+  const userId = (req.session as AuthedSessionData).user._id
 
-  return WorkspaceService.updateWorkspaceTitle(workspaceId, title)
+  return WorkspaceService.updateWorkspaceTitle(workspaceId, title, userId)
     .map((workspace) => res.status(StatusCodes.OK).json(workspace))
     .mapErr((error) => {
       logger.error({

@@ -120,80 +120,89 @@ describe('workspace.service', () => {
   })
 
   describe('updateWorkspaceTitle', () => {
-    it('should successfully update workspace title', async () => {
-      const mockWorkspace = {
-        _id: 'workspaceId' as WorkspaceId,
-        admin: 'user' as UserId,
-        title: 'workspace1',
-        formIds: [] as FormId[],
-        count: 0,
-      }
+    const mockWorkspace = {
+      _id: 'workspaceId' as WorkspaceId,
+      admin: 'user' as UserId,
+      title: 'workspace1',
+      formIds: [] as FormId[],
+      count: 0,
+    }
 
-      const createSpy = jest
+    it('should successfully update workspace title', async () => {
+      const updateSpy = jest
         .spyOn(WorkspaceModel, 'updateWorkspaceTitle')
         .mockResolvedValueOnce(mockWorkspace)
       const actual = await WorkspaceService.updateWorkspaceTitle(
         mockWorkspace._id,
         mockWorkspace.title,
+        mockWorkspace.admin,
       )
 
-      expect(createSpy).toHaveBeenCalledWith(
+      expect(updateSpy).toHaveBeenCalledWith(
         mockWorkspace.title,
         mockWorkspace._id,
+        mockWorkspace.admin,
       )
       expect(actual.isOk()).toEqual(true)
       expect(actual._unsafeUnwrap()).toEqual(mockWorkspace)
     })
 
     it('should return DatabaseValidationError on invalid title whilst creating form', async () => {
-      const mockTitle = 'mockTitle'
-      const mockWorkspaceId = 'mockWorkspaceId'
-
-      const createSpy = jest
+      const updateSpy = jest
         .spyOn(WorkspaceModel, 'updateWorkspaceTitle')
         // @ts-ignore
         .mockRejectedValueOnce(new mongoose.Error.ValidationError())
 
       const actual = await WorkspaceService.updateWorkspaceTitle(
-        mockWorkspaceId,
-        mockTitle,
+        mockWorkspace._id,
+        mockWorkspace.title,
+        mockWorkspace.admin,
       )
 
-      expect(createSpy).toHaveBeenCalledWith(mockTitle, mockWorkspaceId)
+      expect(updateSpy).toHaveBeenCalledWith(
+        mockWorkspace.title,
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
       expect(actual._unsafeUnwrapErr()).toBeInstanceOf(DatabaseValidationError)
     })
 
     it('should return WorkspaceNotFoundError on invalid workspaceId', async () => {
-      const mockTitle = 'mockTitle'
-      const mockWorkspaceId = 'mockWorkspaceId'
-
-      const createSpy = jest
+      const updateSpy = jest
         .spyOn(WorkspaceModel, 'updateWorkspaceTitle')
         .mockResolvedValueOnce(null)
 
       const actual = await WorkspaceService.updateWorkspaceTitle(
-        mockWorkspaceId,
-        mockTitle,
+        mockWorkspace._id,
+        mockWorkspace.title,
+        mockWorkspace.admin,
       )
 
-      expect(createSpy).toHaveBeenCalledWith(mockTitle, mockWorkspaceId)
+      expect(updateSpy).toHaveBeenCalledWith(
+        mockWorkspace.title,
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
       expect(actual._unsafeUnwrapErr()).toBeInstanceOf(WorkspaceNotFoundError)
     })
 
     it('should return DatabaseError when error occurs whilst creating workspace', async () => {
-      const mockTitle = 'mockTitle'
-      const mockWorkspaceId = 'mockWorkspaceId'
       const mockErrorMessage = 'some error'
 
-      const createSpy = jest
+      const updateSpy = jest
         .spyOn(WorkspaceModel, 'updateWorkspaceTitle')
         .mockRejectedValueOnce(new Error(mockErrorMessage))
       const actual = await WorkspaceService.updateWorkspaceTitle(
-        mockWorkspaceId,
-        mockTitle,
+        mockWorkspace._id,
+        mockWorkspace.title,
+        mockWorkspace.admin,
       )
 
-      expect(createSpy).toHaveBeenCalledWith(mockTitle, mockWorkspaceId)
+      expect(updateSpy).toHaveBeenCalledWith(
+        mockWorkspace.title,
+        mockWorkspace._id,
+        mockWorkspace.admin,
+      )
       expect(actual.isErr()).toEqual(true)
       expect(actual._unsafeUnwrapErr()).toEqual(
         new DatabaseError(formatErrorRecoveryMessage(mockErrorMessage)),

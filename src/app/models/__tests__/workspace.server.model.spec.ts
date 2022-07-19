@@ -232,19 +232,34 @@ describe('Workspace Model', () => {
         const actual = await Workspace.updateWorkspaceTitle(
           newWorkspaceTitle,
           MOCK_WORKSPACE_ID,
+          MOCK_USER_ID,
         )
 
         expect(actual).toBeObject()
         expect(actual?.title).toEqual(newWorkspaceTitle)
       })
 
-      it('should return null upon unsuccessful workspace title update', async () => {
+      it('should return null upon unsuccessful update due to invalid workspace id', async () => {
         const newWorkspaceTitle = 'Workspace'
         const invalidWorkspaceId = new ObjectId()
 
         const actual = await Workspace.updateWorkspaceTitle(
           newWorkspaceTitle,
           invalidWorkspaceId,
+          MOCK_USER_ID,
+        )
+
+        expect(actual).toBeNull()
+      })
+
+      it('should return null upon unsuccessful update due to admin not owning workspace', async () => {
+        const newWorkspaceTitle = 'Workspace'
+        const invalidUserId = new ObjectId()
+
+        const actual = await Workspace.updateWorkspaceTitle(
+          newWorkspaceTitle,
+          MOCK_WORKSPACE_ID,
+          invalidUserId,
         )
 
         expect(actual).toBeNull()
